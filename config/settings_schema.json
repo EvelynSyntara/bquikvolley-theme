@@ -41,14 +41,15 @@
       {
         "type": "color",
         "id": "color_accent",
-        "label": "Accent (Volt)",
-        "default": "#D4FF00"
+        "label": "Accent (Brand Orange)",
+        "default": "#F28500",
+        "info": "The signature BQUIK orange — used for CTAs, highlights, and interactive states"
       },
       {
         "type": "color",
         "id": "color_border",
         "label": "Borders",
-        "default": "#2A2A2A"
+        "default": "#252525"
       },
       {
         "type": "header",
@@ -58,13 +59,13 @@
         "type": "color",
         "id": "color_button_primary_bg",
         "label": "Primary button background",
-        "default": "#D4FF00"
+        "default": "#F28500"
       },
       {
         "type": "color",
         "id": "color_button_primary_text",
         "label": "Primary button text",
-        "default": "#0A0A0A"
+        "default": "#FFFFFF"
       }
     ]
   },
@@ -74,14 +75,14 @@
       {
         "type": "font_picker",
         "id": "font_heading",
-        "label": "Headings",
-        "default": "inter_n9"
+        "label": "Headings (Anton recommended)",
+        "default": "anton_n4"
       },
       {
         "type": "font_picker",
         "id": "font_body",
-        "label": "Body text",
-        "default": "inter_n4"
+        "label": "Body text (Montserrat recommended)",
+        "default": "montserrat_n4"
       },
       {
         "type": "range",

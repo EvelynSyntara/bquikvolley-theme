@@ -3,7 +3,7 @@
     class="announcement-bar"
     role="region"
     aria-label="Announcement"
-    style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};"
+    style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; font-family: 'Red Hat Text', sans-serif;"
   >
     <p class="announcement-bar__text">
       {%- if section.settings.link != blank -%}
@@ -41,13 +41,13 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background color",
-      "default": "#D4FF00"
+      "default": "#F28500"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text color",
-      "default": "#0A0A0A"
+      "default": "#FFFFFF"
     },
     {
       "type": "checkbox",
