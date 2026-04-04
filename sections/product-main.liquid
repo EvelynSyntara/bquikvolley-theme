@@ -75,7 +75,9 @@
         </script>
 
         <!-- Product Form -->
-        {%- form 'product', product, id: product_form_id, class: 'product-form', data-product-form: '' -%}
+        <!-- data-product-form lives on the wrapper — Liquid form tag can't take hyphenated params -->
+        <div data-product-form>
+        {%- form 'product', product, id: product_form_id, class: 'product-form' -%}
           <input type="hidden" name="id" value="{{ current_variant.id }}">
 
           {%- unless product.has_only_default_variant -%}
@@ -173,6 +175,7 @@
             {{ form | payment_button }}
           {%- endif -%}
         {%- endform -%}
+        </div><!-- /data-product-form -->
 
         <!-- Product Description -->
         {%- if product.description != blank -%}

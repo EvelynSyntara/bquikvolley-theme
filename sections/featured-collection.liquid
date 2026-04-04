@@ -1,6 +1,10 @@
 {%- liquid
-  assign collection = collections[section.settings.collection]
-  assign products = collection.products | default: (1..8)
+  if section.settings.collection != blank
+    assign collection = collections[section.settings.collection]
+  endif
+  if collection == blank
+    assign collection = collections.all
+  endif
   assign product_limit = section.settings.products_to_show | default: 8
 -%}
 
@@ -21,11 +25,11 @@
           </h2>
         {%- endif -%}
       </div>
-      {%- if section.settings.view_all_label != blank and collection != blank -%}
+      {%- if section.settings.view_all_label != blank -%}
         <a
-          href="{{ collection.url }}"
+          href="{{ collection.url | default: routes.collections_url }}"
           class="section-header__link"
-          aria-label="View all products in {{ collection.title }}"
+          aria-label="View all products"
           data-reveal data-reveal-delay="2"
         >
           {{ section.settings.view_all_label }}
@@ -41,19 +45,11 @@
         aria-label="{{ section.settings.title | default: 'Products' }}"
         id="carousel-{{ section.id }}"
       >
-        {%- if collection != blank -%}
-          {%- for product in collection.products limit: product_limit -%}
-            <div role="listitem" class="product-card-wrap">
-              {%- render 'product-card', product: product -%}
-            </div>
-          {%- endfor -%}
-        {%- else -%}
-          {%- for i in (1..6) -%}
-            <div role="listitem" class="product-card-wrap">
-              {%- render 'product-card', product: nil, placeholder_index: i -%}
-            </div>
-          {%- endfor -%}
-        {%- endif -%}
+        {%- for product in collection.products limit: product_limit -%}
+          <div role="listitem" class="product-card-wrap">
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
       </div>
 
       <div class="carousel-progress" aria-hidden="true">

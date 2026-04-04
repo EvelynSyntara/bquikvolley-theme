@@ -5,7 +5,7 @@
     <h1 class="text-h2" style="margin-bottom:var(--space-xl);" data-reveal>
       Your Cart
       {%- if cart.item_count > 0 -%}
-        <span style="font-size:1rem;font-weight:400;color:var(--c-text-3);margin-left:8px;">({{ cart.item_count }} item{{ cart.item_count | plural: '', 's' }})</span>
+        <span style="font-size:1rem;font-weight:400;color:var(--c-text-3);margin-left:8px;">({{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %})</span>
       {%- endif -%}
     </h1>
 

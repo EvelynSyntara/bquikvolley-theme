@@ -5,7 +5,11 @@
       "Bash(git add:*)",
       "Bash(git commit -m ':*)",
       "Bash(gh repo:*)",
-      "WebFetch(domain:www.bquikvolley.com)"
+      "WebFetch(domain:www.bquikvolley.com)",
+      "Bash(git push:*)",
+      "Bash(curl -s https://www.bquikvolley.com/)",
+      "Bash(curl -s https://www.bquikvolley.com/products/molten)",
+      "Bash(python3 -c ':*)"
     ]
   }
 }

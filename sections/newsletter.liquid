@@ -17,7 +17,8 @@
         <p class="newsletter__body" data-reveal data-reveal-delay="2">{{ section.settings.body }}</p>
       {%- endif -%}
 
-      {%- form 'customer', class: 'newsletter-form', data-newsletter-form: '' -%}
+      <div data-newsletter-form>
+      {%- form 'customer', class: 'newsletter-form' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
         <div class="newsletter-form" data-reveal data-reveal-delay="3">
           <label for="newsletter-email-{{ section.id }}" class="sr-only">Email address</label>
@@ -42,6 +43,7 @@
           </div>
         {%- endif -%}
       {%- endform -%}
+      </div><!-- /data-newsletter-form -->
 
       {%- if section.settings.fine_print != blank -%}
         <p style="font-size: 0.75rem; color: var(--c-text-3); margin-top: 16px;">

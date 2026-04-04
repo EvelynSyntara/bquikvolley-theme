@@ -28,7 +28,12 @@
       </div>
 
       <!-- Content -->
-      <div class="image-with-text__content" data-reveal="{{ section.settings.layout == 'image_second' | ternary: 'left', 'right' }}">
+      {%- if section.settings.layout == 'image_second' -%}
+        {%- assign content_reveal = 'left' -%}
+      {%- else -%}
+        {%- assign content_reveal = 'right' -%}
+      {%- endif -%}
+      <div class="image-with-text__content" data-reveal="{{ content_reveal }}">
         {%- if section.settings.eyebrow != blank -%}
           <p class="image-with-text__eyebrow" data-reveal data-reveal-delay="1">
             {{ section.settings.eyebrow }}
@@ -58,7 +63,7 @@
               data-reveal-delay="{{ forloop.index | plus: 3 }}"
               {{ block.shopify_attributes }}
             >
-              <div style="width:32px;height:32px;border-radius:6px;background:rgba(212,255,0,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--c-accent);font-weight:900;font-size:0.875rem;">
+              <div style="width:32px;height:32px;background:var(--c-accent-muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--c-accent);font-weight:700;font-size:0.875rem;font-family:var(--font-ui);">
                 {{ forloop.index }}
               </div>
               <div>

@@ -408,16 +408,19 @@ function initStickyATC() {
 
 /* ── 8. Add to Cart (PDP) ─────────────────────────────────── */
 function initAddToCart() {
+  // Listen for form submit. e.target is the <form>; closest() walks up to find
+  // the [data-product-form] wrapper div we added to work around Liquid's
+  // prohibition on hyphenated tag parameter names.
   on(document, 'submit', async e => {
-    const form = e.target.closest('[data-product-form]');
-    if (!form) return;
+    const wrapper = e.target.closest('[data-product-form]');
+    if (!wrapper) return;
     e.preventDefault();
 
-    const btn = $('[data-atc-btn]', form);
+    const btn = $('[data-atc-btn]', wrapper);
     const variantId = btn?.dataset.variantId;
     if (!variantId || btn?.disabled) return;
 
-    const originalText = btn.textContent;
+    const originalText = btn.textContent.trim();
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>';
 
@@ -445,11 +448,12 @@ function initAddToCart() {
     }
   });
 
-  // Sticky ATC btn
+  // Sticky ATC — find the actual <form> inside the wrapper div and submit it
   on(document, 'click', e => {
     const btn = e.target.closest('[data-sticky-atc]');
     if (!btn) return;
-    const mainForm = $('[data-product-form]');
+    const wrapper = $('[data-product-form]');
+    const mainForm = wrapper ? $('form', wrapper) : null;
     if (mainForm) mainForm.dispatchEvent(new Event('submit', { bubbles: true }));
   });
 }
