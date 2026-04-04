@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_background": "#080808",
@@ -23,7 +32,90 @@
     "cart_type": "drawer",
     "enable_cart_notes": true,
     "enable_scroll_animations": true,
-    "enable_image_zoom": true
+    "enable_image_zoom": true,
+    "sections": {
+      "announcement-bar": {
+        "type": "announcement-bar",
+        "settings": {
+          "text": "Free shipping on orders over $75 · Use code SPIKE10 for 10% off your first order",
+          "link": "",
+          "bg_color": "#f28500",
+          "text_color": "#ffffff",
+          "dismissible": true
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo": "shopify://shop_images/Bquik_Logo_1.png",
+          "logo_width": 160,
+          "menu": "main-menu",
+          "show_announcement": true
+        }
+      },
+      "hero": {
+        "type": "hero",
+        "settings": {
+          "video": "",
+          "overlay_opacity": 65,
+          "min_height": 100,
+          "eyebrow": "New Season Drop",
+          "headline": "Built for\nThe Court",
+          "subheading": "Performance volleyball apparel engineered for athletes who play hard, train harder, and refuse to settle.",
+          "cta_1_label": "Shop Now",
+          "cta_1_link": "",
+          "cta_2_label": "Our Story",
+          "cta_2_link": "",
+          "show_scroll_indicator": true
+        }
+      },
+      "featured-collection": {
+        "type": "featured-collection",
+        "settings": {
+          "eyebrow": "What We're Playing In",
+          "title": "Shop the Drop",
+          "collection": "",
+          "products_to_show": 8,
+          "view_all_label": "View All"
+        }
+      },
+      "image-with-text": {
+        "type": "image-with-text",
+        "settings": {
+          "layout": "image_first",
+          "bg_color": "#0a0a0a",
+          "image_badge": "",
+          "eyebrow": "Why BQUIK",
+          "title": "Engineered for the Spike",
+          "text": "<p>Every stitch, seam, and fabric choice is made with one goal: to give you an edge on the court. We work with elite volleyball players to design gear that moves with you, not against you.</p>",
+          "cta_label": "Learn More",
+          "cta_link": "",
+          "cta_style": "primary"
+        }
+      },
+      "newsletter": {
+        "type": "newsletter",
+        "settings": {
+          "eyebrow": "Join the Team",
+          "title": "First to the Drop",
+          "body": "Get exclusive early access to new collections, athlete collabs, and member-only deals.",
+          "placeholder": "Your email address",
+          "button_label": "Subscribe",
+          "fine_print": "No spam. Unsubscribe anytime."
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "tagline": "Premium volleyball apparel for players who take the court seriously.",
+          "instagram": "",
+          "tiktok": "",
+          "youtube": "",
+          "facebook": ""
+        }
+      }
+    },
+    "content_for_index": []
   },
   "presets": {}
 }
