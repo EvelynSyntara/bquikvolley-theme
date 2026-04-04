@@ -1,0 +1,166 @@
+<div class="cart-page">
+  <div class="container">
+    {%- render 'breadcrumbs' -%}
+
+    <h1 class="text-h2" style="margin-bottom:var(--space-xl);" data-reveal>
+      Your Cart
+      {%- if cart.item_count > 0 -%}
+        <span style="font-size:1rem;font-weight:400;color:var(--c-text-3);margin-left:8px;">({{ cart.item_count }} item{{ cart.item_count | plural: '', 's' }})</span>
+      {%- endif -%}
+    </h1>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart-layout">
+        <!-- Cart Items -->
+        <div class="cart-items" aria-label="Cart items" aria-live="polite">
+          {%- for item in cart.items -%}
+            <div class="cart-item" data-reveal data-reveal-delay="{{ forloop.index }}">
+              <!-- Image -->
+              <div class="cart-item__image">
+                <a href="{{ item.url }}">
+                  {{
+                    item.image
+                    | image_url: width: 300
+                    | image_tag:
+                      loading: 'lazy',
+                      alt: item.image.alt | default: item.title
+                  }}
+                </a>
+              </div>
+
+              <!-- Details -->
+              <div class="cart-item__details">
+                <h3 class="cart-item__title">
+                  <a href="{{ item.url }}">{{ item.product.title }}</a>
+                </h3>
+                {%- unless item.variant.title == 'Default Title' -%}
+                  <p class="cart-item__variant">{{ item.variant.title }}</p>
+                {%- endunless -%}
+
+                <div class="qty-control" style="margin-bottom:8px;">
+                  <button
+                    type="button"
+                    class="qty-btn"
+                    data-cart-qty="-1"
+                    data-line="{{ forloop.index }}"
+                    aria-label="Decrease quantity"
+                  >−</button>
+                  <span data-qty-display aria-live="polite">{{ item.quantity }}</span>
+                  <button
+                    type="button"
+                    class="qty-btn"
+                    data-cart-qty="1"
+                    data-line="{{ forloop.index }}"
+                    aria-label="Increase quantity"
+                  >+</button>
+                </div>
+
+                <a
+                  href="{{ item.url_to_remove }}"
+                  class="remove-btn"
+                  aria-label="Remove {{ item.title }} from cart"
+                >
+                  Remove
+                </a>
+              </div>
+
+              <!-- Price -->
+              <div class="cart-item__price">
+                {%- if item.original_line_price != item.final_line_price -%}
+                  <span style="color:var(--c-error);">{{ item.final_line_price | money }}</span>
+                  <span style="text-decoration:line-through;color:var(--c-text-3);font-size:0.875rem;display:block;">
+                    {{ item.original_line_price | money }}
+                  </span>
+                {%- else -%}
+                  {{ item.final_line_price | money }}
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+
+          <!-- Cart Notes -->
+          <div style="margin-top:var(--space-xl);">
+            <label for="cart-note" style="font-size:0.875rem;font-weight:600;display:block;margin-bottom:8px;">
+              Order note (optional)
+            </label>
+            <textarea
+              id="cart-note"
+              name="note"
+              class="form-input"
+              style="height:100px;resize:vertical;padding-top:12px;padding-bottom:12px;"
+              placeholder="Special instructions for your order…"
+              aria-label="Order note"
+            >{{ cart.note }}</textarea>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="cart-summary" data-reveal data-reveal-delay="2">
+          <h2 style="margin-bottom:var(--space-xl);">Order Summary</h2>
+          <div class="summary-lines">
+            <div class="summary-line">
+              <span>Subtotal</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+            {%- if cart.total_discounts > 0 -%}
+              <div class="summary-line" style="color:var(--c-success);">
+                <span>Discounts</span>
+                <span>−{{ cart.total_discounts | money }}</span>
+              </div>
+            {%- endif -%}
+            <div class="summary-line" style="color:var(--c-text-2);">
+              <span>Shipping</span>
+              <span>Calculated at checkout</span>
+            </div>
+            <div class="summary-line total">
+              <span>Total</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            name="checkout"
+            class="btn btn-primary btn-full"
+            style="height:56px;font-size:1rem;"
+          >
+            Proceed to Checkout
+          </button>
+
+          {%- if additional_checkout_buttons -%}
+            <div class="additional-checkout-buttons" style="margin-top:16px;">
+              {{ content_for_additional_checkout_buttons }}
+            </div>
+          {%- endif -%}
+
+          <p class="cart-notice">
+            Taxes and shipping calculated at checkout. 30-day free returns.
+          </p>
+
+          <!-- Trust badges -->
+          <div style="display:flex;justify-content:center;gap:16px;margin-top:24px;padding-top:24px;border-top:1px solid var(--c-border);">
+            <div style="text-align:center;">
+              {%- render 'icon-secure' -%}
+              <span style="display:block;font-size:0.7rem;color:var(--c-text-3);margin-top:4px;">Secure</span>
+            </div>
+            <div style="text-align:center;">
+              {%- render 'icon-shipping' -%}
+              <span style="display:block;font-size:0.7rem;color:var(--c-text-3);margin-top:4px;">Free Ship $75+</span>
+            </div>
+            <div style="text-align:center;">
+              {%- render 'icon-returns' -%}
+              <span style="display:block;font-size:0.7rem;color:var(--c-text-3);margin-top:4px;">Easy Returns</span>
+            </div>
+          </div>
+        </div>
+      </form>
+    {%- else -%}
+      <div class="cart-empty" data-reveal>
+        <div class="cart-empty__icon">🏐</div>
+        <h2 class="text-h2" style="margin-bottom:16px;">Your cart is empty</h2>
+        <p style="color:var(--c-text-2);margin-bottom:32px;">Looks like you haven't added anything yet. Time to gear up!</p>
+        <a href="{{ routes.collections_url }}" class="btn btn-primary btn-lg">Shop Now</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

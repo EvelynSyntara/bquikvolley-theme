@@ -1,0 +1,148 @@
+{%- liquid
+  assign card_product = product
+  assign first_variant = card_product.first_available_variant | default: card_product.variants.first
+  assign on_sale = false
+  if first_variant.compare_at_price > first_variant.price
+    assign on_sale = true
+  endif
+  assign sold_out = true
+  if card_product.available
+    assign sold_out = false
+  endif
+-%}
+
+{%- if card_product != blank -%}
+  <article
+    class="product-card"
+    aria-label="{{ card_product.title | escape }}"
+  >
+    <div class="product-card__media">
+      <a
+        href="{{ card_product.url }}"
+        class="product-card__image-link"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        {%- if card_product.featured_image != blank -%}
+          {{
+            card_product.featured_image
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              class: 'product-card__img',
+              sizes: '(min-width: 1280px) 320px, (min-width: 1024px) 320px, (min-width: 640px) 300px, 85vw',
+              alt: card_product.featured_image.alt | default: card_product.title | escape
+          }}
+          {%- if card_product.images[1] != blank -%}
+            {{
+              card_product.images[1]
+              | image_url: width: 600
+              | image_tag:
+                loading: 'lazy',
+                class: 'product-card__media-alt',
+                alt: card_product.images[1].alt | default: card_product.title | escape
+            }}
+          {%- endif -%}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg product-card__img' }}
+        {%- endif -%}
+      </a>
+
+      <!-- Badges -->
+      <div class="product-card__badges" aria-live="polite">
+        {%- if sold_out -%}
+          <span class="badge badge-sold-out">Sold Out</span>
+        {%- elsif on_sale -%}
+          {%- assign discount = first_variant.compare_at_price | minus: first_variant.price | times: 100 | divided_by: first_variant.compare_at_price -%}
+          <span class="badge badge-sale">–{{ discount }}%</span>
+        {%- elsif card_product.tags contains 'new' or card_product.tags contains 'New' -%}
+          <span class="badge badge-new">New</span>
+        {%- endif -%}
+      </div>
+
+      <!-- Quick Add -->
+      {%- unless sold_out -%}
+        <div class="product-card__quick-add">
+          {%- if card_product.has_only_default_variant -%}
+            <button
+              type="button"
+              class="quick-add-btn"
+              data-variant-id="{{ first_variant.id }}"
+              aria-label="Quick add {{ card_product.title }} to cart"
+            >
+              Quick Add
+            </button>
+          {%- else -%}
+            <a
+              href="{{ card_product.url }}"
+              class="quick-add-btn"
+              aria-label="View options for {{ card_product.title }}"
+            >
+              View Options
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endunless -%}
+    </div>
+
+    <div class="product-card__info">
+      {%- if card_product.vendor != blank -%}
+        <span class="product-card__vendor">{{ card_product.vendor }}</span>
+      {%- endif -%}
+
+      <h3 class="product-card__title">
+        <a href="{{ card_product.url }}" class="product-card__title-link">
+          {{ card_product.title | escape }}
+        </a>
+      </h3>
+
+      <!-- Colour swatches -->
+      {%- assign colour_option = card_product.options_by_name['Color'] | default: card_product.options_by_name['Colour'] -%}
+      {%- if colour_option -%}
+        <div class="product-card__swatches" aria-label="Colour options">
+          {%- for value in colour_option.values limit: 5 -%}
+            <span
+              class="swatch"
+              style="background-color: {{ value | downcase | replace: ' ', '' }};"
+              title="{{ value }}"
+              aria-label="{{ value }}"
+            ></span>
+          {%- endfor -%}
+          {%- if colour_option.values.size > 5 -%}
+            <span class="text-xs text-muted">+{{ colour_option.values.size | minus: 5 }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="product-card__price">
+        {%- if on_sale -%}
+          <span class="product-card__price-current product-card__price-sale">
+            {{ first_variant.price | money }}
+          </span>
+          <span class="product-card__price-compare">
+            {{ first_variant.compare_at_price | money }}
+          </span>
+        {%- else -%}
+          <span class="product-card__price-current">
+            {%- if card_product.price_varies -%}
+              From {{ card_product.price_min | money }}
+            {%- else -%}
+              {{ card_product.price | money }}
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      </div>
+    </div>
+  </article>
+
+{%- else -%}
+  <!-- Placeholder card -->
+  <div class="product-card" aria-hidden="true">
+    <div class="product-card__media skeleton" style="aspect-ratio:3/4;"></div>
+    <div class="product-card__info">
+      <div class="skeleton" style="height:12px;width:60px;border-radius:4px;margin-bottom:8px;"></div>
+      <div class="skeleton" style="height:16px;width:80%;border-radius:4px;margin-bottom:12px;"></div>
+      <div class="skeleton" style="height:20px;width:50px;border-radius:4px;"></div>
+    </div>
+  </div>
+{%- endif -%}

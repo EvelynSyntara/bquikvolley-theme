@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "New Season Drop",
+        "headline": "Built for\nThe Court",
+        "subheading": "Performance volleyball apparel engineered for athletes who play hard, train harder, and refuse to settle.",
+        "cta_1_label": "Shop Now",
+        "cta_1_link": "/collections/all",
+        "cta_2_label": "Our Story",
+        "cta_2_link": "/pages/about",
+        "overlay_opacity": 65,
+        "min_height": 100,
+        "show_scroll_indicator": true
+      }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "What We're Playing In",
+        "title": "Shop the Drop",
+        "products_to_show": 8,
+        "view_all_label": "View All"
+      }
+    },
+    "image-with-text": {
+      "type": "image-with-text",
+      "settings": {
+        "eyebrow": "Why BQUIK",
+        "title": "Engineered for the Spike",
+        "text": "<p>Every stitch, seam, and fabric choice is made with one goal: to give you an edge on the court. We work with elite volleyball players to design gear that moves with you, not against you.</p>",
+        "cta_label": "Our Technology",
+        "cta_link": "/pages/technology",
+        "cta_style": "primary",
+        "layout": "image_first"
+      },
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "title": "Performance Fabrics",
+            "text": "4-way stretch, moisture-wicking materials trusted by professional players worldwide."
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "title": "Team Customisation",
+            "text": "Custom jerseys with your name, number, and colours — minimum 6 pieces."
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "title": "Free 30-Day Returns",
+            "text": "Not the right fit? Send it back. No questions, no hassle."
+          }
+        }
+      },
+      "block_order": ["feature-1", "feature-2", "feature-3"]
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Join the Team",
+        "title": "First to the Drop",
+        "body": "Get exclusive early access to new collections, athlete collabs, and member-only deals.",
+        "button_label": "Subscribe",
+        "fine_print": "No spam. Unsubscribe anytime."
+      }
+    }
+  },
+  "order": ["hero", "featured-collection", "image-with-text", "newsletter"]
+}

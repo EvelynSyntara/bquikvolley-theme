@@ -1,0 +1,84 @@
+{{ 'theme.css' | asset_url | stylesheet_tag }}
+
+<div class="collection-header">
+  <div class="container">
+    {%- if collection.image -%}
+      <div class="collection-banner">
+        {{
+          collection.image
+          | image_url: width: 1600
+          | image_tag:
+            loading: 'eager',
+            sizes: '100vw',
+            alt: collection.title
+        }}
+        <div class="collection-banner__content">
+          <h1 class="text-h1" data-reveal>{{ collection.title }}</h1>
+          {%- if collection.description != blank -%}
+            <p style="color:var(--c-text-2);max-width:50ch;margin-top:12px;" data-reveal data-reveal-delay="1">
+              {{ collection.description }}
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- else -%}
+      <h1 class="text-h1" style="margin-bottom:16px;" data-reveal>{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <p style="color:var(--c-text-2);max-width:60ch;margin-bottom:32px;" data-reveal data-reveal-delay="1">
+          {{ collection.description }}
+        </p>
+      {%- endif -%}
+    {%- endif -%}
+
+    <!-- Sort + Filter Bar -->
+    <div class="collection-filters" role="navigation" aria-label="Product filters">
+      <span style="font-size:0.8125rem;font-weight:600;color:var(--c-text-3);align-self:center;">
+        {{ collection.products_count }} products
+      </span>
+      {%- for tag in collection.all_tags -%}
+        {%- if current_tags contains tag -%}
+          <a href="{{ collection.url }}" class="filter-chip active" aria-pressed="true">{{ tag }}</a>
+        {%- else -%}
+          {{ tag | link_to_tag: tag | replace: '<a ', '<a class="filter-chip" ' }}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom: var(--space-3xl);">
+  {%- paginate collection.products by 24 -%}
+    {%- if collection.products.size > 0 -%}
+      <div class="products-grid" role="list" aria-label="Products">
+        {%- for product in collection.products -%}
+          <div role="listitem" data-reveal data-reveal-delay="{{ forloop.index | modulo: 4 }}">
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" aria-label="Pagination" style="display:flex;justify-content:center;gap:8px;margin-top:var(--space-2xl);">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="btn btn-secondary">← Prev</a>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="btn btn-secondary" style="min-width:44px;">{{ part.title }}</a>
+            {%- else -%}
+              <span class="btn btn-primary" style="min-width:44px;" aria-current="page">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="btn btn-secondary">Next →</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- else -%}
+      <div class="cart-empty" style="text-align:center;padding:var(--space-3xl) 0;">
+        <p style="color:var(--c-text-2);font-size:1.25rem;margin-bottom:24px;">No products found.</p>
+        <a href="{{ routes.root_url }}" class="btn btn-primary">Back to Home</a>
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>

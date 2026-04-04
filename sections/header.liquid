@@ -1,0 +1,216 @@
+<header
+  class="site-header is-transparent{% if section.settings.show_announcement %} has-announcement{% endif %}"
+  role="banner"
+  data-section-id="{{ section.id }}"
+>
+  <div class="header-inner">
+    <!-- Nav Left -->
+    <nav class="header-nav" aria-label="Main navigation">
+      {%- for link in linklists[section.settings.menu].links -%}
+        <a
+          href="{{ link.url }}"
+          class="header-nav__link{% if link.active %} active{% endif %}"
+          {% if link.current %}aria-current="page"{% endif %}
+        >
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    <!-- Logo Centre -->
+    <a href="{{ routes.root_url }}" class="header-logo" aria-label="{{ shop.name }} — Home">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 240 | image_tag: loading: 'eager', fetchpriority: 'high', alt: shop.name }}
+      {%- else -%}
+        B<span>QUIK</span> VOLLEY
+      {%- endif -%}
+    </a>
+
+    <!-- Actions Right -->
+    <div class="header-actions">
+      <button
+        class="header-icon-btn"
+        aria-label="Search"
+        data-open-search
+        type="button"
+      >
+        {%- render 'icon-search' -%}
+      </button>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a
+          href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+          class="header-icon-btn"
+          aria-label="Account"
+        >
+          {%- render 'icon-account' -%}
+        </a>
+      {%- endif -%}
+
+      <button
+        class="header-icon-btn cart-btn"
+        aria-label="Cart"
+        data-open-cart
+        type="button"
+      >
+        {%- render 'cart-icon' -%}
+      </button>
+
+      <!-- Hamburger (mobile) -->
+      <button
+        class="header-icon-btn menu-toggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        type="button"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<nav
+  id="mobile-menu"
+  class="mobile-menu"
+  aria-hidden="true"
+  aria-label="Mobile navigation"
+>
+  <ul class="mobile-menu__nav">
+    {%- for link in linklists[section.settings.menu].links -%}
+      <li>
+        <a
+          href="{{ link.url }}"
+          class="mobile-menu__link{% if link.active %} active{% endif %}"
+        >
+          {{ link.title }}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+    {%- if shop.customer_accounts_enabled -%}
+      <a
+        href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+        class="btn btn-secondary btn-full"
+      >
+        {%- if customer -%}My Account{%- else -%}Sign In{%- endif -%}
+      </a>
+    {%- endif -%}
+    <a href="{{ routes.cart_url }}" class="btn btn-primary btn-full">
+      Cart ({{ cart.item_count }})
+    </a>
+  </div>
+</nav>
+
+<!-- Search Overlay -->
+<div
+  id="search-overlay"
+  class="modal-overlay"
+  aria-hidden="true"
+  role="dialog"
+  aria-label="Search"
+  style="align-items: flex-start; padding-top: 100px;"
+  data-close-modal
+>
+  <div class="modal" style="max-width:600px;" onclick="event.stopPropagation()">
+    <div class="modal__body" style="padding: 24px;">
+      <form action="{{ routes.search_url }}" method="get" role="search">
+        <input type="hidden" name="type" value="product">
+        <div style="position:relative;">
+          <input
+            type="search"
+            name="q"
+            class="form-input"
+            style="width:100%;padding-right:56px;"
+            placeholder="Search jerseys, shorts, accessories…"
+            aria-label="Search products"
+            autocomplete="off"
+            data-search-input
+          >
+          <button
+            type="submit"
+            style="position:absolute;right:0;top:0;height:100%;padding:0 16px;color:var(--c-text-2);"
+            aria-label="Submit search"
+          >
+            {%- render 'icon-search' -%}
+          </button>
+        </div>
+      </form>
+      <div
+        data-search-results
+        hidden
+        style="margin-top:8px;background:var(--c-bg-2);border:1px solid var(--c-border);border-radius:8px;overflow:hidden;"
+      ></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const overlay = document.getElementById('search-overlay');
+    const openBtns = document.querySelectorAll('[data-open-search]');
+    openBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => overlay.querySelector('input')?.focus(), 50);
+      });
+    });
+    overlay?.addEventListener('click', e => {
+      if (e.target === overlay) {
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay?.classList.contains('is-open')) {
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "shopify-section-header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 80,
+      "max": 280,
+      "step": 8,
+      "unit": "px",
+      "label": "Logo width",
+      "default": 160
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Account for announcement bar height",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,29 @@
+{
+  "current": {
+    "color_background": "#0A0A0A",
+    "color_background_secondary": "#141414",
+    "color_text": "#FFFFFF",
+    "color_text_secondary": "#AAAAAA",
+    "color_accent": "#D4FF00",
+    "color_border": "#2A2A2A",
+    "color_button_primary_bg": "#D4FF00",
+    "color_button_primary_text": "#0A0A0A",
+    "font_heading": "inter_n9",
+    "font_body": "inter_n4",
+    "font_body_size": 16,
+    "page_width": 1440,
+    "spacing_sections": 80,
+    "social_instagram_link": "https://instagram.com/bquikvolley",
+    "social_tiktok_link": "https://tiktok.com/@bquikvolley",
+    "social_youtube_link": "",
+    "social_facebook_link": "",
+    "show_vendor_on_cards": true,
+    "show_quick_add": true,
+    "show_swatches": true,
+    "cart_type": "drawer",
+    "enable_cart_notes": true,
+    "enable_scroll_animations": true,
+    "enable_image_zoom": true
+  },
+  "presets": {}
+}

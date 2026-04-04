@@ -1,0 +1,217 @@
+<section
+  class="hero"
+  data-section-id="{{ section.id }}"
+  style="min-height: {{ section.settings.min_height }}vh;"
+>
+  <!-- Media Background -->
+  <div class="hero__media">
+    {%- if section.settings.video != blank -%}
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        aria-hidden="true"
+        preload="none"
+        poster="{%- if section.settings.image != blank -%}{{ section.settings.image | image_url: width: 1920 }}{%- endif -%}"
+      >
+        <source src="{{ section.settings.video }}">
+      </video>
+    {%- elsif section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 1920
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          class: 'hero__bg-image',
+          sizes: '100vw',
+          alt: section.settings.image.alt | default: shop.name
+      }}
+    {%- else -%}
+      <div style="
+        background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%);
+        width: 100%; height: 100%;
+        position: relative;
+        overflow: hidden;
+      ">
+        <!-- Accent grid decoration -->
+        <div style="
+          position:absolute;inset:0;
+          background-image: linear-gradient(var(--c-border) 1px, transparent 1px), linear-gradient(90deg, var(--c-border) 1px, transparent 1px);
+          background-size: 80px 80px;
+          opacity: 0.3;
+        "></div>
+        <div style="
+          position:absolute;
+          top: 20%; right: 10%;
+          width: 400px; height: 400px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(212,255,0,0.15) 0%, transparent 70%);
+        "></div>
+      </div>
+    {%- endif -%}
+
+    <!-- Overlay -->
+    <div
+      class="hero__overlay"
+      style="background: linear-gradient(to top, rgba(10,10,10,{{ section.settings.overlay_opacity | divided_by: 100.0 }}) 0%, rgba(10,10,10,{{ section.settings.overlay_opacity | divided_by: 200.0 }}) 50%, rgba(10,10,10,0.1) 100%);"
+    ></div>
+  </div>
+
+  <!-- Content -->
+  <div class="hero__content container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="hero__eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.headline != blank -%}
+      <h1 class="hero__headline" data-reveal data-reveal-delay="1">
+        {{ section.settings.headline | newline_to_br }}
+      </h1>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="hero__sub" data-reveal data-reveal-delay="2">
+        {{ section.settings.subheading }}
+      </p>
+    {%- endif -%}
+
+    <div class="hero__ctas" data-reveal data-reveal-delay="3">
+      {%- if section.settings.cta_1_label != blank -%}
+        <a
+          href="{{ section.settings.cta_1_link | default: '/collections/all' }}"
+          class="btn btn-primary btn-lg"
+        >
+          {{ section.settings.cta_1_label }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta_2_label != blank -%}
+        <a
+          href="{{ section.settings.cta_2_link | default: '/pages/about' }}"
+          class="btn btn-secondary btn-lg"
+        >
+          {{ section.settings.cta_2_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.settings.show_scroll_indicator -%}
+    <div class="hero__scroll-indicator" aria-hidden="true">Scroll</div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "video",
+      "label": "Background video URL (.mp4)",
+      "info": "Enter a direct .mp4 URL. The image above will be used as a poster."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 65
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Minimum height",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "New Season Drop"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Built for\nThe Court"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Performance volleyball apparel engineered for athletes who play hard, train harder, and refuse to settle."
+    },
+    {
+      "type": "header",
+      "content": "CTA Buttons"
+    },
+    {
+      "type": "text",
+      "id": "cta_1_label",
+      "label": "Primary button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_1_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "cta_2_label",
+      "label": "Secondary button label",
+      "default": "Our Story"
+    },
+    {
+      "type": "url",
+      "id": "cta_2_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show scroll indicator",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "settings": {
+        "eyebrow": "New Season Drop",
+        "headline": "Built for\nThe Court",
+        "subheading": "Performance volleyball apparel engineered for athletes who play hard, train harder, and refuse to settle.",
+        "cta_1_label": "Shop Now",
+        "cta_2_label": "Our Story"
+      }
+    }
+  ]
+}
+{% endschema %}

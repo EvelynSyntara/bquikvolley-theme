@@ -1,0 +1,198 @@
+<section
+  class="image-with-text section-pad"
+  data-section-id="{{ section.id }}"
+  style="background-color: {{ section.settings.bg_color }};"
+>
+  <div class="container">
+    <div class="image-with-text-layout{% if section.settings.layout == 'image_second' %} reverse{% endif %}">
+      <!-- Image -->
+      <div class="image-with-text__media" data-reveal="{{ section.settings.layout | default: 'left' }}">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 900
+            | image_tag:
+              loading: 'lazy',
+              sizes: '(min-width: 768px) 50vw, 100vw',
+              alt: section.settings.image.alt | default: section.settings.title
+          }}
+        {%- else -%}
+          {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+
+        {%- if section.settings.image_badge != blank -%}
+          <div class="image-with-text__media-badge">
+            {{ section.settings.image_badge }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Content -->
+      <div class="image-with-text__content" data-reveal="{{ section.settings.layout == 'image_second' | ternary: 'left', 'right' }}">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="image-with-text__eyebrow" data-reveal data-reveal-delay="1">
+            {{ section.settings.eyebrow }}
+          </p>
+        {%- endif -%}
+
+        <div class="accent-line" aria-hidden="true"></div>
+
+        {%- if section.settings.title != blank -%}
+          <h2 class="image-with-text__title text-h2" data-reveal data-reveal-delay="2">
+            {{ section.settings.title }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <div class="image-with-text__body rte" data-reveal data-reveal-delay="3">
+            {{ section.settings.text }}
+          </div>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'feature' -%}
+            <div
+              class="image-with-text__feature"
+              style="display:flex;gap:12px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--c-border);"
+              data-reveal
+              data-reveal-delay="{{ forloop.index | plus: 3 }}"
+              {{ block.shopify_attributes }}
+            >
+              <div style="width:32px;height:32px;border-radius:6px;background:rgba(212,255,0,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--c-accent);font-weight:900;font-size:0.875rem;">
+                {{ forloop.index }}
+              </div>
+              <div>
+                <div style="font-weight:700;font-size:0.9375rem;margin-bottom:4px;">{{ block.settings.title }}</div>
+                <div style="font-size:0.875rem;color:var(--c-text-2);">{{ block.settings.text }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if section.settings.cta_label != blank -%}
+          <a
+            href="{{ section.settings.cta_link | default: '/collections/all' }}"
+            class="btn {% if section.settings.cta_style == 'primary' %}btn-primary{% else %}btn-secondary{% endif %}"
+            data-reveal
+            data-reveal-delay="4"
+          >
+            {{ section.settings.cta_label }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with Text",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Image position",
+      "options": [
+        { "value": "image_first", "label": "Image first (left)" },
+        { "value": "image_second", "label": "Image second (right)" }
+      ],
+      "default": "image_first"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background colour",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_badge",
+      "label": "Image badge text",
+      "info": "Short text shown over the image (e.g. 'New Season')"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Why BQUIK"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Engineered for the Spike"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Every stitch, seam, and fabric choice is made with one goal: to give you an edge on the court. We work with elite volleyball players to design gear that moves with you, not against you.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Primary (Volt)" },
+        { "value": "secondary", "label": "Secondary (Outlined)" }
+      ],
+      "default": "primary"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Moisture-wicking fabric"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "4-way stretch performance fabric keeps you cool and dry through the longest rallies."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with Text",
+      "blocks": [
+        { "type": "feature", "settings": { "title": "Performance Fabrics", "text": "4-way stretch, moisture-wicking materials used by pros." } },
+        { "type": "feature", "settings": { "title": "Team Customisation", "text": "Custom jerseys with your name, number, and colours." } },
+        { "type": "feature", "settings": { "title": "Free Returns", "text": "Not the right fit? Send it back within 30 days, no questions." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

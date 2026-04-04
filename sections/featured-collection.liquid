@@ -1,0 +1,129 @@
+{%- liquid
+  assign collection = collections[section.settings.collection]
+  assign products = collection.products | default: (1..8)
+  assign product_limit = section.settings.products_to_show | default: 8
+-%}
+
+<section
+  class="featured-collection section-pad"
+  data-section-id="{{ section.id }}"
+  aria-label="{{ section.settings.title | default: 'Featured Collection' }}"
+>
+  <div class="container">
+    <div class="section-header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="text-xs text-accent" style="margin-bottom:8px;" data-reveal>{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="text-h2 section-header__title" data-reveal data-reveal-delay="1">
+            {{ section.settings.title }}
+          </h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.view_all_label != blank and collection != blank -%}
+        <a
+          href="{{ collection.url }}"
+          class="section-header__link"
+          aria-label="View all products in {{ collection.title }}"
+          data-reveal data-reveal-delay="2"
+        >
+          {{ section.settings.view_all_label }}
+          {%- render 'icon-arrow' -%}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="collection-carousel-wrap">
+      <div
+        class="collection-carousel"
+        role="list"
+        aria-label="{{ section.settings.title | default: 'Products' }}"
+        id="carousel-{{ section.id }}"
+      >
+        {%- if collection != blank -%}
+          {%- for product in collection.products limit: product_limit -%}
+            <div role="listitem" class="product-card-wrap">
+              {%- render 'product-card', product: product -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..6) -%}
+            <div role="listitem" class="product-card-wrap">
+              {%- render 'product-card', product: nil, placeholder_index: i -%}
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      <div class="carousel-progress" aria-hidden="true">
+        <div class="carousel-progress__bar" style="width: 15%;"></div>
+      </div>
+
+      <div class="carousel-controls">
+        <button
+          class="carousel-btn"
+          data-carousel-prev
+          aria-label="Previous products"
+          aria-controls="carousel-{{ section.id }}"
+        >
+          {%- render 'icon-arrow-left' -%}
+        </button>
+        <button
+          class="carousel-btn"
+          data-carousel-next
+          aria-label="Next products"
+          aria-controls="carousel-{{ section.id }}"
+        >
+          {%- render 'icon-arrow' -%}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "What We're Playing In"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Shop the Drop"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "label": "Products to show",
+      "default": 8
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all button label",
+      "default": "View All"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

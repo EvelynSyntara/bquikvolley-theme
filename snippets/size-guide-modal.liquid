@@ -1,0 +1,156 @@
+<div
+  id="size-guide-modal"
+  class="modal-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="size-guide-title"
+  aria-hidden="true"
+>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal__header">
+      <h2 class="modal__title" id="size-guide-title">Size Guide</h2>
+      <button
+        type="button"
+        class="modal__close"
+        data-close-modal
+        aria-label="Close size guide"
+      >
+        {%- render 'icon-close' -%}
+      </button>
+    </div>
+
+    <div class="modal__body">
+      <!-- Unit Toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:24px;">
+        <button
+          type="button"
+          id="unit-inches"
+          class="filter-chip active"
+          onclick="switchUnit('in')"
+          aria-pressed="true"
+        >Inches (US)</button>
+        <button
+          type="button"
+          id="unit-cm"
+          class="filter-chip"
+          onclick="switchUnit('cm')"
+          aria-pressed="false"
+        >Centimetres</button>
+      </div>
+
+      <!-- Women's Jerseys -->
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;">Women's Jerseys & Tops</h3>
+      <div style="overflow-x:auto;margin-bottom:32px;">
+        <table class="size-table" id="size-table-in">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Bust (in)</th>
+              <th>Waist (in)</th>
+              <th>Hip (in)</th>
+              <th>Height</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>30–32</td><td>24–26</td><td>33–35</td><td>5'0–5'4"</td></tr>
+            <tr><td>S</td><td>33–35</td><td>27–29</td><td>36–38</td><td>5'2–5'6"</td></tr>
+            <tr><td>M</td><td>36–38</td><td>30–32</td><td>39–41</td><td>5'4–5'8"</td></tr>
+            <tr><td>L</td><td>39–41</td><td>33–35</td><td>42–44</td><td>5'6–5'10"</td></tr>
+            <tr><td>XL</td><td>42–44</td><td>36–38</td><td>45–47</td><td>5'8–6'0"</td></tr>
+            <tr><td>2XL</td><td>45–47</td><td>39–41</td><td>48–50</td><td>5'10–6'2"</td></tr>
+          </tbody>
+        </table>
+        <table class="size-table" id="size-table-cm" style="display:none;">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Bust (cm)</th>
+              <th>Waist (cm)</th>
+              <th>Hip (cm)</th>
+              <th>Height (cm)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>76–81</td><td>61–66</td><td>84–89</td><td>152–162</td></tr>
+            <tr><td>S</td><td>84–89</td><td>69–74</td><td>91–97</td><td>157–168</td></tr>
+            <tr><td>M</td><td>91–97</td><td>76–81</td><td>99–104</td><td>162–173</td></tr>
+            <tr><td>L</td><td>99–104</td><td>84–89</td><td>107–112</td><td>168–178</td></tr>
+            <tr><td>XL</td><td>107–112</td><td>91–97</td><td>114–119</td><td>173–183</td></tr>
+            <tr><td>2XL</td><td>114–119</td><td>99–104</td><td>122–127</td><td>178–188</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Men's / Unisex -->
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;">Men's & Unisex Jerseys</h3>
+      <div style="overflow-x:auto;margin-bottom:24px;">
+        <table class="size-table" id="mens-table-in">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Chest (in)</th>
+              <th>Waist (in)</th>
+              <th>Height</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>34–36</td><td>28–30</td><td>5'4–5'7"</td></tr>
+            <tr><td>S</td><td>37–39</td><td>31–33</td><td>5'6–5'9"</td></tr>
+            <tr><td>M</td><td>40–42</td><td>34–36</td><td>5'8–5'11"</td></tr>
+            <tr><td>L</td><td>43–45</td><td>37–39</td><td>5'10–6'1"</td></tr>
+            <tr><td>XL</td><td>46–48</td><td>40–42</td><td>6'0–6'3"</td></tr>
+            <tr><td>2XL</td><td>49–51</td><td>43–45</td><td>6'2–6'5"</td></tr>
+            <tr><td>3XL</td><td>52–54</td><td>46–48</td><td>6'3–6'6"</td></tr>
+          </tbody>
+        </table>
+        <table class="size-table" id="mens-table-cm" style="display:none;">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Chest (cm)</th>
+              <th>Waist (cm)</th>
+              <th>Height (cm)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>86–91</td><td>71–76</td><td>162–170</td></tr>
+            <tr><td>S</td><td>94–99</td><td>79–84</td><td>168–175</td></tr>
+            <tr><td>M</td><td>102–107</td><td>86–91</td><td>173–180</td></tr>
+            <tr><td>L</td><td>109–114</td><td>94–99</td><td>178–185</td></tr>
+            <tr><td>XL</td><td>117–122</td><td>102–107</td><td>183–190</td></tr>
+            <tr><td>2XL</td><td>124–130</td><td>109–114</td><td>188–196</td></tr>
+            <tr><td>3XL</td><td>132–137</td><td>117–122</td><td>190–198</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-size:0.8125rem;color:var(--c-text-3);line-height:1.6;">
+        Measurements are body measurements. If you're between sizes, we recommend going up. All BQUIK gear is cut for athletic builds.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchUnit(unit) {
+  const inTables = document.querySelectorAll('[id$="-in"], [id$="-table-in"]');
+  const cmTables = document.querySelectorAll('[id$="-cm"], [id$="-table-cm"]');
+  const inBtn = document.getElementById('unit-inches');
+  const cmBtn = document.getElementById('unit-cm');
+  if (unit === 'cm') {
+    inTables.forEach(t => t.style.display = 'none');
+    cmTables.forEach(t => t.style.display = '');
+    cmBtn.classList.add('active');
+    inBtn.classList.remove('active');
+    cmBtn.setAttribute('aria-pressed', 'true');
+    inBtn.setAttribute('aria-pressed', 'false');
+  } else {
+    cmTables.forEach(t => t.style.display = 'none');
+    inTables.forEach(t => t.style.display = '');
+    inBtn.classList.add('active');
+    cmBtn.classList.remove('active');
+    inBtn.setAttribute('aria-pressed', 'true');
+    cmBtn.setAttribute('aria-pressed', 'false');
+  }
+}
+</script>

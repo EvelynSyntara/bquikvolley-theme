@@ -1,0 +1,220 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "BQUIK Volley",
+    "theme_version": "1.0.0",
+    "theme_author": "BQUIK Volley",
+    "theme_documentation_url": "https://bquikvolley.com",
+    "theme_support_url": "https://bquikvolley.com/pages/contact"
+  },
+  {
+    "name": "Colours",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Primary Palette"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#0A0A0A"
+      },
+      {
+        "type": "color",
+        "id": "color_background_secondary",
+        "label": "Secondary background",
+        "default": "#141414"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Body text",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_text_secondary",
+        "label": "Secondary text",
+        "default": "#AAAAAA"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent (Volt)",
+        "default": "#D4FF00"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Borders",
+        "default": "#2A2A2A"
+      },
+      {
+        "type": "header",
+        "content": "Buttons"
+      },
+      {
+        "type": "color",
+        "id": "color_button_primary_bg",
+        "label": "Primary button background",
+        "default": "#D4FF00"
+      },
+      {
+        "type": "color",
+        "id": "color_button_primary_text",
+        "label": "Primary button text",
+        "default": "#0A0A0A"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Headings",
+        "default": "inter_n9"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body text",
+        "default": "inter_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_body_size",
+        "min": 14,
+        "max": 18,
+        "step": 1,
+        "unit": "px",
+        "label": "Base font size",
+        "default": 16
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1024,
+        "max": 1600,
+        "step": 32,
+        "unit": "px",
+        "label": "Max page width",
+        "default": 1440
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Vertical section spacing",
+        "default": 80
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Recommended 32×32px .png or .ico"
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "TikTok URL"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube URL"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook URL"
+      }
+    ]
+  },
+  {
+    "name": "Product Cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_vendor_on_cards",
+        "label": "Show vendor on product cards",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_quick_add",
+        "label": "Show quick-add button",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_swatches",
+        "label": "Show colour swatches",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          { "value": "drawer", "label": "Slide-out drawer" },
+          { "value": "page", "label": "Cart page" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_cart_notes",
+        "label": "Enable cart notes",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Animations",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_scroll_animations",
+        "label": "Enable scroll reveal animations",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_image_zoom",
+        "label": "Enable product image zoom on hover",
+        "default": true
+      }
+    ]
+  }
+]

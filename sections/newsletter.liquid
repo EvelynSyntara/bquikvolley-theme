@@ -1,0 +1,103 @@
+<section
+  class="newsletter section-pad"
+  data-section-id="{{ section.id }}"
+  aria-label="Newsletter signup"
+>
+  <div class="container">
+    <div class="newsletter-inner">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="newsletter__eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.title != blank -%}
+        <h2 class="newsletter__title" data-reveal data-reveal-delay="1">{{ section.settings.title }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <p class="newsletter__body" data-reveal data-reveal-delay="2">{{ section.settings.body }}</p>
+      {%- endif -%}
+
+      {%- form 'customer', class: 'newsletter-form', data-newsletter-form: '' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="newsletter-form" data-reveal data-reveal-delay="3">
+          <label for="newsletter-email-{{ section.id }}" class="sr-only">Email address</label>
+          <input
+            id="newsletter-email-{{ section.id }}"
+            type="email"
+            name="contact[email]"
+            class="form-input"
+            placeholder="{{ section.settings.placeholder | default: 'Enter your email' }}"
+            autocomplete="email"
+            required
+            aria-required="true"
+          >
+          <button type="submit" class="btn btn-primary" aria-label="Subscribe to newsletter">
+            {{ section.settings.button_label | default: 'Subscribe' }}
+          </button>
+        </div>
+        <div class="form-success" data-success role="status" aria-live="polite"></div>
+        {%- if form.posted_successfully? -%}
+          <div class="form-success visible" role="status">
+            Thanks for subscribing! Watch your inbox for exclusive drops.
+          </div>
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- if section.settings.fine_print != blank -%}
+        <p style="font-size: 0.75rem; color: var(--c-text-3); margin-top: 16px;">
+          {{ section.settings.fine_print }}
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Join the Team"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "First to the Drop"
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": "Body text",
+      "default": "Get exclusive early access to new collections, athlete collabs, and member-only deals."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "fine_print",
+      "label": "Fine print",
+      "default": "No spam. Unsubscribe anytime."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}
