@@ -9,7 +9,12 @@
       "Bash(git push:*)",
       "Bash(curl -s https://www.bquikvolley.com/)",
       "Bash(curl -s https://www.bquikvolley.com/products/molten)",
-      "Bash(python3 -c ':*)"
+      "Bash(python3 -c ':*)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)",
+      "Bash(shopify version:*)",
+      "Bash(ls -la *.toml)",
+      "Bash(python3:*)"
     ]
   }
 }
