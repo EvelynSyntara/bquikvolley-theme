@@ -1,0 +1,102 @@
+{%- liquid
+  assign related_collection = collections['all']
+  assign product_limit = section.settings.products_to_show | default: 6
+-%}
+
+<section
+  class="featured-collection section-pad"
+  data-section-id="{{ section.id }}"
+  aria-label="Related products"
+>
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="text-xs text-accent" style="margin-bottom:8px;" data-reveal>
+          {{ section.settings.eyebrow | default: 'Complete the Kit' }}
+        </p>
+        <h2 class="text-h2 section-header__title" data-reveal data-reveal-delay="1">
+          {{ section.settings.title | default: 'You May Also Like' }}
+        </h2>
+      </div>
+      <a
+        href="{{ routes.collections_url }}"
+        class="section-header__link"
+        data-reveal data-reveal-delay="2"
+      >
+        View All
+        {%- render 'icon-arrow' -%}
+      </a>
+    </div>
+
+    <div class="collection-carousel-wrap">
+      <div
+        class="collection-carousel"
+        role="list"
+        aria-label="Related products"
+        id="related-carousel-{{ section.id }}"
+      >
+        {%- for p in related_collection.products limit: product_limit -%}
+          {%- unless p.id == product.id -%}
+            <div role="listitem">
+              {%- render 'product-card', product: p -%}
+            </div>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="carousel-progress" aria-hidden="true">
+        <div class="carousel-progress__bar" style="width: 15%;"></div>
+      </div>
+
+      <div class="carousel-controls">
+        <button
+          class="carousel-btn"
+          data-carousel-prev
+          aria-label="Previous"
+          aria-controls="related-carousel-{{ section.id }}"
+        >{%- render 'icon-arrow-left' -%}</button>
+        <button
+          class="carousel-btn"
+          data-carousel-next
+          aria-label="Next"
+          aria-controls="related-carousel-{{ section.id }}"
+        >{%- render 'icon-arrow' -%}</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Complete the Kit"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "You May Also Like"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 12,
+      "step": 2,
+      "label": "Products to show",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ]
+}
+{% endschema %}
