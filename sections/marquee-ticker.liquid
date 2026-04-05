@@ -1,0 +1,53 @@
+<section class="marquee-ticker{% if section.settings.style == 'dark' %} marquee-ticker--dark{% endif %}" data-section-id="{{ section.id }}" aria-hidden="true">
+  <div class="marquee-ticker__track" style="--marquee-duration: {{ section.settings.speed | default: 25 }}s;">
+    {%- assign ticker_items = section.settings.text | split: ',' -%}
+    {%- for copy in (1..2) -%}
+      <div class="marquee-ticker__group">
+        {%- for item in ticker_items -%}
+          <span class="marquee-ticker__item">{{ item | strip }}</span>
+          <span class="marquee-ticker__dot" aria-hidden="true"></span>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Marquee Ticker",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Ticker items (comma-separated)",
+      "default": "BUILT FOR THE COURT,PERFORMANCE VOLLEYBALL,FREE SHIPPING OVER $75,ENGINEERED FOR ATHLETES,SHOP THE DROP,COURT-TESTED GEAR"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Scroll speed (lower = faster)",
+      "default": 25
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "accent", "label": "Accent (orange)" },
+        { "value": "dark", "label": "Dark" }
+      ],
+      "default": "accent"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Ticker"
+    }
+  ]
+}
+{% endschema %}

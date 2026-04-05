@@ -1,0 +1,70 @@
+<section class="stats-bar section-pad" data-section-id="{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="stats-bar__eyebrow text-xs text-accent" data-reveal>{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <div class="stats-bar__grid">
+      {%- for block in section.blocks -%}
+        <div class="stats-bar__item" data-reveal data-reveal-delay="{{ forloop.index }}" {{ block.shopify_attributes }}>
+          <span class="stats-bar__number" data-count-to="{{ block.settings.number }}">0</span>
+          <span class="stats-bar__suffix">{{ block.settings.suffix }}</span>
+          <span class="stats-bar__label">{{ block.settings.label }}</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stats Bar",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "By The Numbers"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "500",
+          "info": "Just the number (e.g. 500, 100, 4.9)"
+        },
+        {
+          "type": "text",
+          "id": "suffix",
+          "label": "Suffix",
+          "default": "+",
+          "info": "Text after the number (e.g. +, %, ★)"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Athletes Equipped"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats Bar",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "500", "suffix": "+", "label": "Athletes Equipped" } },
+        { "type": "stat", "settings": { "number": "100", "suffix": "%", "label": "Court-Tested" } },
+        { "type": "stat", "settings": { "number": "4.9", "suffix": "★", "label": "Average Rating" } },
+        { "type": "stat", "settings": { "number": "30", "suffix": "-Day", "label": "Free Returns" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

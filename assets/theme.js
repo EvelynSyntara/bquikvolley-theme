@@ -677,26 +677,74 @@ function initImageZoom() {
   });
 }
 
-/* ── 14. Announcement Bar dismiss ────────────────────────── */
+/* ── 14. Announcement Bar dismiss + rotation ────────────── */
 function initAnnouncementBar() {
-  const bar = $('.announcement-bar');
-  const closeBtn = $('[data-dismiss-announcement]');
-  if (!bar || !closeBtn) return;
+  const bar = $('[data-announcement-bar]');
+  if (!bar) return;
 
-  on(closeBtn, 'click', () => {
-    bar.style.maxHeight = bar.offsetHeight + 'px';
-    bar.style.transition = 'max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease';
-    requestAnimationFrame(() => {
-      bar.style.maxHeight = '0';
-      bar.style.opacity = '0';
-      bar.style.padding = '0';
+  const closeBtn = $('[data-dismiss-announcement]', bar);
+  if (closeBtn) {
+    on(closeBtn, 'click', () => {
+      bar.style.maxHeight = bar.offsetHeight + 'px';
+      bar.style.transition = 'max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease';
+      requestAnimationFrame(() => {
+        bar.style.maxHeight = '0';
+        bar.style.opacity = '0';
+        bar.style.padding = '0';
+      });
+      sessionStorage.setItem('bquik-announcement-dismissed', '1');
     });
-    sessionStorage.setItem('bquik-announcement-dismissed', '1');
-  });
+  }
 
   if (sessionStorage.getItem('bquik-announcement-dismissed')) {
     bar.style.display = 'none';
+    return;
   }
+
+  // Rotate messages
+  const messages = $$('.announcement-bar__text', bar);
+  if (messages.length <= 1) return;
+
+  let current = 0;
+  const speed = parseInt(bar.dataset.rotationSpeed, 10) || 4000;
+
+  setInterval(() => {
+    messages[current].classList.remove('is-active');
+    current = (current + 1) % messages.length;
+    messages[current].classList.add('is-active');
+  }, speed);
+}
+
+/* ── 14b. Stats Count-Up Animation ──────────────────────── */
+function initStatsCountUp() {
+  const stats = $$('[data-count-to]');
+  if (!stats.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseFloat(el.dataset.countTo);
+      const isDecimal = String(target).includes('.');
+      const duration = 1800;
+      const start = performance.now();
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = eased * target;
+        el.textContent = isDecimal ? value.toFixed(1) : Math.round(value);
+        if (progress < 1) requestAnimationFrame(update);
+      }
+
+      requestAnimationFrame(update);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.3 });
+
+  stats.forEach(el => observer.observe(el));
 }
 
 /* ── 15. Predictive Search ────────────────────────────────── */
@@ -918,6 +966,7 @@ function init() {
   initCarousels();
   initNewsletter();
   initAnnouncementBar();
+  initStatsCountUp();
   initSearch();
   initAddToCart();
   initCartPage();
