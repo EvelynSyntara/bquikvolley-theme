@@ -1,0 +1,47 @@
+<section
+  class="recently-viewed featured-collection section-pad"
+  data-section-id="{{ section.id }}"
+  data-current-product="{{ product.id }}"
+  aria-label="Recently viewed products"
+>
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="text-xs text-accent" style="margin-bottom:8px;">Your History</p>
+        <h2 class="text-h2 section-header__title">Recently Viewed</h2>
+      </div>
+    </div>
+
+    <div class="collection-carousel-wrap">
+      <div
+        class="collection-carousel"
+        role="list"
+        aria-label="Recently viewed products"
+        id="recent-carousel-{{ section.id }}"
+      >
+        {%- comment -%} Populated by JS from localStorage {%- endcomment -%}
+      </div>
+
+      <div class="carousel-progress" aria-hidden="true">
+        <div class="carousel-progress__bar" style="width:15%;"></div>
+      </div>
+
+      <div class="carousel-controls">
+        <button class="carousel-btn" data-carousel-prev aria-label="Previous" aria-controls="recent-carousel-{{ section.id }}">{%- render 'icon-arrow-left' -%}</button>
+        <button class="carousel-btn" data-carousel-next aria-label="Next" aria-controls="recent-carousel-{{ section.id }}">{%- render 'icon-arrow' -%}</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "tag": "section",
+  "presets": [
+    {
+      "name": "Recently Viewed"
+    }
+  ]
+}
+{% endschema %}

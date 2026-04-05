@@ -1,0 +1,75 @@
+<div class="blog-header">
+  <div class="container">
+    <p class="text-xs text-accent" style="margin-bottom:8px;" data-reveal>{{ blog.title }}</p>
+    <h1 class="text-h1" data-reveal data-reveal-delay="1">Latest from the Court</h1>
+  </div>
+</div>
+
+<div class="container">
+  {%- paginate blog.articles by 12 -%}
+    {%- if blog.articles.size > 0 -%}
+      <div class="blog-grid">
+        {%- for article in blog.articles -%}
+          <article class="article-card" data-reveal data-reveal-delay="{{ forloop.index | modulo: 3 }}" aria-label="{{ article.title | escape }}">
+            {%- if article.image != blank -%}
+              <div class="article-card__image">
+                <a href="{{ article.url }}" tabindex="-1" aria-hidden="true">
+                  {{
+                    article.image
+                    | image_url: width: 800
+                    | image_tag:
+                      loading: 'lazy',
+                      sizes: '(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw',
+                      alt: article.image.alt | default: article.title
+                  }}
+                </a>
+              </div>
+            {%- endif -%}
+            <div class="article-card__body">
+              <p class="article-card__meta">
+                {{ article.published_at | date: '%b %d, %Y' }}
+                {%- if article.author != blank -%}
+                  &nbsp;&middot;&nbsp;{{ article.author }}
+                {%- endif -%}
+              </p>
+              <h2 class="article-card__title">
+                <a href="{{ article.url }}">{{ article.title | escape }}</a>
+              </h2>
+              {%- if article.excerpt_or_content != blank -%}
+                <p class="article-card__excerpt">
+                  {{ article.excerpt_or_content | strip_html | truncate: 120 }}
+                </p>
+              {%- endif -%}
+              <a href="{{ article.url }}" class="article-card__read-more" aria-label="Read {{ article.title | escape }}">
+                Read More &rarr;
+              </a>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" aria-label="Pagination" style="display:flex;justify-content:center;gap:8px;margin-top:var(--space-2xl);padding-bottom:var(--space-2xl);">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="btn btn-secondary">&larr; Prev</a>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="btn btn-secondary" style="min-width:44px;">{{ part.title }}</a>
+            {%- else -%}
+              <span class="btn btn-primary" style="min-width:44px;" aria-current="page">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="btn btn-secondary">Next &rarr;</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- else -%}
+      <div style="text-align:center;padding:var(--space-3xl) 0;">
+        <p style="color:var(--c-text-2);margin-bottom:24px;">No posts yet. Check back soon.</p>
+        <a href="{{ routes.root_url }}" class="btn btn-primary">Back to Home</a>
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>

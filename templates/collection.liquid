@@ -30,19 +30,50 @@
       {%- endif -%}
     {%- endif -%}
 
-    <!-- Sort + Filter Bar -->
-    <div class="collection-filters" role="navigation" aria-label="Product filters">
-      <span style="font-size:0.8125rem;font-weight:600;color:var(--c-text-3);align-self:center;">
-        {{ collection.products_count }} products
+    <!-- Toolbar: count + sort + tag filters -->
+    <div class="collection-toolbar">
+      <span style="font-size:0.8125rem;font-weight:600;color:var(--c-text-3);">
+        {{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}
       </span>
-      {%- for tag in collection.all_tags -%}
-        {%- if current_tags contains tag -%}
-          <a href="{{ collection.url }}" class="filter-chip active" aria-pressed="true">{{ tag }}</a>
-        {%- else -%}
-          {{ tag | link_to_tag: tag | replace: '<a ', '<a class="filter-chip" ' }}
+
+      <form id="sort-form" method="get" style="display:flex;align-items:center;gap:8px;">
+        {%- if current_tags.size > 0 -%}
+          {%- for tag in current_tags -%}
+            <input type="hidden" name="q[]" value="{{ tag | escape }}">
+          {%- endfor -%}
         {%- endif -%}
-      {%- endfor -%}
+        <label for="sort-by" class="text-xs" style="color:var(--c-text-3);">Sort:</label>
+        <select
+          id="sort-by"
+          name="sort_by"
+          class="sort-select"
+          onchange="document.getElementById('sort-form').submit()"
+          aria-label="Sort products by"
+        >
+          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+          <option value="manual"{% if sort_by == 'manual' %} selected{% endif %}>Featured</option>
+          <option value="best-selling"{% if sort_by == 'best-selling' %} selected{% endif %}>Best Selling</option>
+          <option value="created-descending"{% if sort_by == 'created-descending' %} selected{% endif %}>Newest</option>
+          <option value="price-ascending"{% if sort_by == 'price-ascending' %} selected{% endif %}>Price: Low &rarr; High</option>
+          <option value="price-descending"{% if sort_by == 'price-descending' %} selected{% endif %}>Price: High &rarr; Low</option>
+          <option value="title-ascending"{% if sort_by == 'title-ascending' %} selected{% endif %}>A &rarr; Z</option>
+          <option value="title-descending"{% if sort_by == 'title-descending' %} selected{% endif %}>Z &rarr; A</option>
+        </select>
+      </form>
     </div>
+
+    <!-- Tag filter chips -->
+    {%- if collection.all_tags.size > 0 -%}
+      <div class="collection-filters" role="navigation" aria-label="Product filters" style="margin-bottom:var(--space-xl);">
+        {%- for tag in collection.all_tags -%}
+          {%- if current_tags contains tag -%}
+            <a href="{{ collection.url }}" class="filter-chip active" aria-pressed="true">{{ tag }}</a>
+          {%- else -%}
+            {{ tag | link_to_tag: tag | replace: '<a ', '<a class="filter-chip" ' }}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
   </div>
 </div>
 

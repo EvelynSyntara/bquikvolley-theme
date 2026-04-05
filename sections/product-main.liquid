@@ -83,6 +83,13 @@
           {%- endif -%}
         </div>
 
+        {%- comment -%} Low stock indicator {%- endcomment -%}
+        {%- if current_variant.inventory_management != blank -%}
+          {%- if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 5 -%}
+            <p class="product-low-stock" data-low-stock>Only {{ current_variant.inventory_quantity }} left in stock</p>
+          {%- endif -%}
+        {%- endif -%}
+
         {%- comment -%} Variant data for JS {%- endcomment -%}
         <script type="application/json" data-variant-json>
           {{ product.variants | json }}
@@ -179,6 +186,16 @@
 
               {%- endfor -%}
             {%- endunless -%}
+
+            {%- comment -%} Quantity selector {%- endcomment -%}
+            <div class="variant-section">
+              <div class="variant-label">Quantity</div>
+              <div class="qty-control">
+                <button type="button" class="qty-btn" data-pdp-qty="-1" aria-label="Decrease quantity">−</button>
+                <span class="qty-display" data-pdp-qty-value aria-live="polite">1</span>
+                <button type="button" class="qty-btn" data-pdp-qty="1" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
 
             {%- comment -%} ATC button — observed by JS for sticky bar {%- endcomment -%}
             <div data-atc-form-area>

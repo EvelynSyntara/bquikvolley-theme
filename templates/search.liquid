@@ -1,0 +1,113 @@
+<div class="search-page-header">
+  <div class="container">
+    <p class="text-xs text-accent" style="margin-bottom:8px;">Search</p>
+    <h1 class="text-h1" data-reveal>
+      {%- if search.performed and search.terms != blank -%}
+        Results for &ldquo;{{ search.terms | escape }}&rdquo;
+      {%- else -%}
+        Search
+      {%- endif -%}
+    </h1>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-form-full">
+      <input type="hidden" name="type" value="product">
+      <input
+        type="search"
+        name="q"
+        class="form-input"
+        value="{{ search.terms | escape }}"
+        placeholder="Search jerseys, shorts, accessories…"
+        aria-label="Search products"
+        autocomplete="off"
+      >
+      <button type="submit" aria-label="Search">
+        {%- render 'icon-search' -%}
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:var(--space-3xl);">
+  {%- if search.performed -%}
+    {%- paginate search.results by 24 -%}
+      {%- if search.results_count > 0 -%}
+        <p class="search-results-meta" data-reveal>
+          {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for &ldquo;{{ search.terms | escape }}&rdquo;
+        </p>
+
+        <div class="products-grid" role="list" aria-label="Search results">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              <div role="listitem" data-reveal data-reveal-delay="{{ forloop.index | modulo: 4 }}">
+                {%- render 'product-card', product: item -%}
+              </div>
+            {%- elsif item.object_type == 'article' -%}
+              <div role="listitem" data-reveal data-reveal-delay="{{ forloop.index | modulo: 4 }}">
+                <article class="article-card">
+                  {%- if item.image != blank -%}
+                    <div class="article-card__image">
+                      <a href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+                        {{ item.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: item.title | escape }}
+                      </a>
+                    </div>
+                  {%- endif -%}
+                  <div class="article-card__body">
+                    <p class="article-card__meta">Article &middot; {{ item.published_at | date: '%b %d, %Y' }}</p>
+                    <h2 class="article-card__title">
+                      <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                    </h2>
+                    {%- if item.excerpt_or_content != blank -%}
+                      <p class="article-card__excerpt">{{ item.excerpt_or_content | strip_html | truncate: 110 }}</p>
+                    {%- endif -%}
+                    <a href="{{ item.url }}" class="article-card__read-more">Read More &rarr;</a>
+                  </div>
+                </article>
+              </div>
+            {%- elsif item.object_type == 'page' -%}
+              <div role="listitem" data-reveal data-reveal-delay="{{ forloop.index | modulo: 4 }}">
+                <div class="article-card">
+                  <div class="article-card__body">
+                    <p class="article-card__meta">Page</p>
+                    <h2 class="article-card__title">
+                      <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                    </h2>
+                    {%- if item.content != blank -%}
+                      <p class="article-card__excerpt">{{ item.content | strip_html | truncate: 110 }}</p>
+                    {%- endif -%}
+                    <a href="{{ item.url }}" class="article-card__read-more">View Page &rarr;</a>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="Pagination" style="display:flex;justify-content:center;gap:8px;margin-top:var(--space-2xl);">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="btn btn-secondary">&larr; Prev</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="btn btn-secondary" style="min-width:44px;">{{ part.title }}</a>
+              {%- else -%}
+                <span class="btn btn-primary" style="min-width:44px;" aria-current="page">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="btn btn-secondary">Next &rarr;</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- else -%}
+        <div style="text-align:center;padding:var(--space-2xl) 0;">
+          <p style="color:var(--c-text-2);font-size:1.125rem;margin-bottom:24px;">
+            No results for &ldquo;{{ search.terms | escape }}&rdquo;. Try a different term.
+          </p>
+          <a href="{{ routes.collections_url }}" class="btn btn-primary">Browse All Products</a>
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  {%- endif -%}
+</div>

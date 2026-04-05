@@ -1,11 +1,8 @@
-{%- liquid
-  assign related_collection = collections['all']
-  assign product_limit = section.settings.products_to_show | default: 6
--%}
-
 <section
   class="featured-collection section-pad"
   data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-recommendations-url="/recommendations/products"
   aria-label="Related products"
 >
   <div class="container">
@@ -28,19 +25,25 @@
       </a>
     </div>
 
-    <div class="collection-carousel-wrap">
+    <div class="collection-carousel-wrap" data-recommendations-target>
       <div
         class="collection-carousel"
         role="list"
         aria-label="Related products"
         id="related-carousel-{{ section.id }}"
       >
-        {%- for p in related_collection.products limit: product_limit -%}
-          {%- unless p.id == product.id -%}
-            <div role="listitem">
-              {%- render 'product-card', product: p -%}
+        {%- comment -%} Placeholders shown while API loads {%- endcomment -%}
+        {%- for i in (1..6) -%}
+          <div role="listitem" aria-hidden="true" class="product-card-wrap">
+            <div class="product-card" aria-hidden="true">
+              <div class="product-card__media skeleton" style="aspect-ratio:3/4;"></div>
+              <div class="product-card__info">
+                <div class="skeleton" style="height:12px;width:60px;border-radius:4px;margin-bottom:8px;"></div>
+                <div class="skeleton" style="height:16px;width:80%;border-radius:4px;margin-bottom:12px;"></div>
+                <div class="skeleton" style="height:20px;width:50px;border-radius:4px;"></div>
+              </div>
             </div>
-          {%- endunless -%}
+          </div>
         {%- endfor -%}
       </div>
 

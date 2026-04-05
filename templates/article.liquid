@@ -1,0 +1,106 @@
+<article class="container">
+  <div class="article-page">
+    {%- render 'breadcrumbs' -%}
+
+    <p class="article-page__meta">
+      <a href="{{ blog.url }}" class="accent">{{ blog.title }}</a>
+      <span>{{ article.published_at | date: '%B %d, %Y' }}</span>
+      {%- if article.author != blank -%}
+        <span>By {{ article.author }}</span>
+      {%- endif -%}
+      {%- if article.comments_count > 0 -%}
+        <span>{{ article.comments_count }} comment{% if article.comments_count != 1 %}s{% endif %}</span>
+      {%- endif -%}
+    </p>
+
+    <h1 class="article-page__title">{{ article.title | escape }}</h1>
+
+    {%- if article.image != blank -%}
+      <div class="article-page__hero">
+        {{
+          article.image
+          | image_url: width: 1200
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            sizes: '(min-width: 1024px) 780px, 100vw',
+            alt: article.image.alt | default: article.title
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="article-body rte">
+      {{ article.content }}
+    </div>
+
+    {%- if article.tags.size > 0 -%}
+      <div style="margin-top:var(--space-xl);display:flex;gap:8px;flex-wrap:wrap;">
+        {%- for tag in article.tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="tag">{{ tag }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <!-- Back to blog -->
+    <div style="margin-top:var(--space-xl);padding-top:var(--space-xl);border-top:1px solid var(--c-border);">
+      <a href="{{ blog.url }}" class="btn btn-secondary">&larr; Back to {{ blog.title }}</a>
+    </div>
+
+    {%- if blog.comments_enabled? -%}
+      <div class="article-comments">
+        <h2 class="text-h3" style="margin-bottom:var(--space-xl);">
+          {{ article.comments_count }} Comment{% if article.comments_count != 1 %}s{% endif %}
+        </h2>
+
+        {%- paginate article.comments by 10 -%}
+          {%- for comment in article.comments -%}
+            <div class="article-comment" id="comment-{{ comment.id }}">
+              <p class="article-comment__author">
+                {{ comment.author }} &middot; {{ comment.created_at | date: '%B %d, %Y' }}
+              </p>
+              <div>{{ comment.content }}</div>
+            </div>
+          {%- endfor -%}
+          {%- if paginate.pages > 1 -%}
+            <div style="margin-top:var(--space-lg);">{{ paginate | default_pagination }}</div>
+          {%- endif -%}
+        {%- endpaginate -%}
+
+        {%- form 'new_comment', article, class: 'comment-form' -%}
+          <h3 class="text-h3" style="margin-bottom:var(--space-xl);">Leave a Comment</h3>
+
+          {%- if form.errors -%}
+            <div style="color:var(--c-error);margin-bottom:var(--space-md);">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+          {%- if form.posted_successfully? -%}
+            <p style="color:var(--c-success);margin-bottom:var(--space-md);">
+              {%- if blog.moderated? -%}
+                Your comment has been submitted and is awaiting moderation.
+              {%- else -%}
+                Thanks for your comment!
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-md);">
+            <div>
+              <label for="comment-author" class="text-xs" style="display:block;margin-bottom:6px;">Name <span style="color:var(--c-error)">*</span></label>
+              <input type="text" id="comment-author" name="comment[author]" class="form-input" value="{{ form.author }}" required aria-required="true">
+            </div>
+            <div>
+              <label for="comment-email" class="text-xs" style="display:block;margin-bottom:6px;">Email <span style="color:var(--c-error)">*</span></label>
+              <input type="email" id="comment-email" name="comment[email]" class="form-input" value="{{ form.email }}" required aria-required="true">
+            </div>
+          </div>
+          <div style="margin-bottom:var(--space-md);">
+            <label for="comment-body" class="text-xs" style="display:block;margin-bottom:6px;">Comment <span style="color:var(--c-error)">*</span></label>
+            <textarea id="comment-body" name="comment[body]" class="form-input" rows="5" required aria-required="true">{{ form.body }}</textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Post Comment</button>
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</article>

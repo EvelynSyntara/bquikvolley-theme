@@ -1,0 +1,48 @@
+<div class="container collections-list-page">
+  <p class="text-xs text-accent" style="margin-bottom:8px;" data-reveal>Shop</p>
+  <h1 class="text-h1" style="margin-bottom:4px;" data-reveal data-reveal-delay="1">All Collections</h1>
+  <p style="color:var(--c-text-2);margin-bottom:0;" data-reveal data-reveal-delay="2">
+    Everything you need to own the court.
+  </p>
+
+  <div class="collections-grid">
+    {%- for collection in collections -%}
+      {%- unless collection.handle == 'frontpage' -%}
+        <a
+          href="{{ collection.url }}"
+          class="collection-card"
+          data-reveal
+          data-reveal-delay="{{ forloop.index | modulo: 4 }}"
+          aria-label="{{ collection.title | escape }}"
+        >
+          {%- if collection.image != blank -%}
+            {{
+              collection.image
+              | image_url: width: 600
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw',
+                alt: collection.image.alt | default: collection.title
+            }}
+          {%- elsif collection.products.first.featured_image != blank -%}
+            {{
+              collection.products.first.featured_image
+              | image_url: width: 600
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw',
+                alt: collection.title
+            }}
+          {%- else -%}
+            {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+
+          <div class="collection-card__overlay">
+            <h2 class="collection-card__title">{{ collection.title | escape }}</h2>
+            <p class="collection-card__count">{{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}</p>
+          </div>
+        </a>
+      {%- endunless -%}
+    {%- endfor -%}
+  </div>
+</div>

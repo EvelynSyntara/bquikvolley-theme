@@ -1,2 +1,12 @@
+<div
+  data-product-id="{{ product.id }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-url="{{ product.url }}"
+  data-product-image="{{ product.featured_image | image_url: width: 400 }}"
+  data-product-price="{{ product.price }}"
+  aria-hidden="true"
+  style="display:none;"
+></div>
 {% section 'product-main' %}
 {% section 'related-products' %}
+{% section 'recently-viewed' %}

@@ -222,6 +222,23 @@ function renderCartDrawer(cart) {
     subtotalEl.textContent = formatMoney(cart.total_price);
   }
 
+  // Free shipping progress bar
+  const FREE_SHIPPING_THRESHOLD = 7500; // cents — matches "Free shipping over $75"
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - cart.total_price);
+  const progress = Math.min(100, (cart.total_price / FREE_SHIPPING_THRESHOLD) * 100);
+  const shippingFill = document.getElementById('cart-shipping-fill');
+  const shippingText = document.getElementById('cart-shipping-text');
+  if (shippingFill) shippingFill.style.width = `${progress}%`;
+  if (shippingText) {
+    if (remaining === 0) {
+      shippingText.innerHTML = `<strong>Free shipping unlocked!</strong>`;
+      shippingText.dataset.unlocked = 'true';
+    } else {
+      shippingText.textContent = `${formatMoney(remaining)} away from free shipping`;
+      delete shippingText.dataset.unlocked;
+    }
+  }
+
   if (cart.item_count === 0) {
     itemsEl.innerHTML = `
       <div class="cart-empty" style="padding: 48px 0; text-align: center;">
@@ -298,6 +315,21 @@ function initProductPage() {
   initVariantSelector();
   initGallery();
   initStickyATC();
+  initPdpQty();
+}
+
+function initPdpQty() {
+  const form = $('[data-product-form]');
+  if (!form) return;
+  on(form, 'click', e => {
+    const btn = e.target.closest('[data-pdp-qty]');
+    if (!btn) return;
+    const display = $('[data-pdp-qty-value]', form);
+    if (!display) return;
+    const current = parseInt(display.textContent, 10) || 1;
+    const next = Math.max(1, current + parseInt(btn.dataset.pdpQty, 10));
+    display.textContent = next;
+  });
 }
 
 function initVariantSelector() {
@@ -325,7 +357,14 @@ function initVariantSelector() {
 
   function updateUI(variant) {
     if (!variant) {
-      if (atcBtn) { atcBtn.disabled = true; atcBtn.textContent = 'Unavailable'; }
+      if (atcBtn) {
+        const allSelected = variantData[0]?.options.every((_, i) => selectedOptions[`option${i + 1}`]);
+        atcBtn.disabled = true;
+        atcBtn.textContent = allSelected ? 'Sold Out' : 'Select a size';
+        atcBtn.dataset.variantId = '';
+      }
+      const lowStockEl = $('[data-low-stock]');
+      if (lowStockEl) lowStockEl.style.display = 'none';
       return;
     }
 
@@ -348,6 +387,19 @@ function initVariantSelector() {
     }
     if (stickyAtcPrice) stickyAtcPrice.textContent = price;
 
+    // Low stock indicator
+    const lowStockEl = $('[data-low-stock]');
+    if (lowStockEl) {
+      const qty = variant.inventory_quantity;
+      const managed = variant.inventory_management;
+      if (managed && qty > 0 && qty <= 5) {
+        lowStockEl.textContent = `Only ${qty} left in stock`;
+        lowStockEl.style.display = '';
+      } else {
+        lowStockEl.style.display = 'none';
+      }
+    }
+
     // Update URL
     const url = new URL(window.location);
     url.searchParams.set('variant', variant.id);
@@ -363,9 +415,14 @@ function initVariantSelector() {
     const optionName = optionGroup?.dataset.optionGroup;
     if (!optionName) return;
 
+    const wasActive = sizeBtn.classList.contains('active');
     $$('.size-btn', optionGroup).forEach(b => b.classList.remove('active'));
-    sizeBtn.classList.add('active');
-    selectedOptions[optionName] = sizeBtn.dataset.value;
+    if (wasActive) {
+      delete selectedOptions[optionName];
+    } else {
+      sizeBtn.classList.add('active');
+      selectedOptions[optionName] = sizeBtn.dataset.value;
+    }
     updateUI(findVariant());
   });
 
@@ -428,7 +485,7 @@ function initAddToCart() {
       const res = await fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ id: variantId, quantity: 1 })
+        body: JSON.stringify({ id: variantId, quantity: parseInt($('[data-pdp-qty-value]', wrapper)?.textContent, 10) || 1 })
       });
 
       if (!res.ok) throw new Error('Failed to add item');
@@ -707,6 +764,148 @@ async function fetchSearchResults(query, resultsEl) {
   }
 }
 
+/* ── 16. Product Recommendations ─────────────────────────── */
+async function initProductRecommendations() {
+  const section = $('[data-recommendations-url]');
+  if (!section) return;
+
+  const productId = section.dataset.productId;
+  const sectionId = section.dataset.sectionId;
+  const limit = section.querySelector('[data-recommendations-target]')
+    ?.closest('section')?.dataset.productsToShow || 6;
+
+  if (!productId) return;
+
+  try {
+    const res = await fetch(
+      `/recommendations/products.json?product_id=${productId}&limit=${limit}&intent=related`
+    );
+    if (!res.ok) return;
+    const data = await res.json();
+    const products = data.products;
+    if (!products || products.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    const carousel = section.querySelector('.collection-carousel');
+    if (!carousel) return;
+
+    carousel.innerHTML = products.map(p => {
+      const img = p.featured_image
+        ? `<img src="${p.featured_image.replace(/\.jpg|\.png|\.webp/, '')}_600x.jpg" alt="${p.title}" loading="lazy" class="product-card__img" style="width:100%;height:100%;object-fit:cover;">`
+        : '';
+      const price = formatMoney(p.price_min);
+      const comparePrice = p.compare_at_price_min > p.price_min
+        ? `<span class="product-card__price-compare">${formatMoney(p.compare_at_price_min)}</span>` : '';
+      const saleBadge = p.compare_at_price_min > p.price_min
+        ? `<span class="badge badge-sale">Sale</span>` : '';
+      const newBadge = p.tags && (p.tags.includes('new') || p.tags.includes('New'))
+        ? `<span class="badge badge-new">New</span>` : '';
+
+      return `
+        <div role="listitem" class="product-card-wrap">
+          <article class="product-card" aria-label="${p.title}">
+            <div class="product-card__media">
+              <a href="${p.url}" class="product-card__image-link" tabindex="-1" aria-hidden="true">
+                ${img}
+              </a>
+              <div class="product-card__badges">${saleBadge}${newBadge}</div>
+              <div class="product-card__quick-add">
+                <a href="${p.url}" class="quick-add-btn">View Options</a>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <h3 class="product-card__title">
+                <a href="${p.url}" class="product-card__title-link">${p.title}</a>
+              </h3>
+              <div class="product-card__price">
+                <span class="product-card__price-current${p.compare_at_price_min > p.price_min ? ' product-card__price-sale' : ''}">${price}</span>
+                ${comparePrice}
+              </div>
+            </div>
+          </article>
+        </div>`;
+    }).join('');
+
+    // Re-init carousel for new items
+    $$('[data-carousel-prev], [data-carousel-next]', section).forEach(btn => {
+      const targetId = btn.getAttribute('aria-controls');
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      on(btn, 'click', () => {
+        const dir = btn.hasAttribute('data-carousel-prev') ? -340 : 340;
+        target.scrollBy({ left: dir, behavior: 'smooth' });
+      });
+    });
+  } catch (err) {
+    console.error('Recommendations error:', err);
+  }
+}
+
+/* ── 17. Recently Viewed Products ────────────────────────── */
+function trackRecentlyViewed() {
+  const productEl = document.querySelector('[data-product-id]');
+  if (!productEl) return;
+
+  const id = productEl.dataset.productId;
+  const title = productEl.dataset.productTitle;
+  const url = productEl.dataset.productUrl;
+  const image = productEl.dataset.productImage;
+  const price = productEl.dataset.productPrice;
+  if (!id) return;
+
+  const KEY = 'bquik-recently-viewed';
+  let viewed = [];
+  try { viewed = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e) {}
+
+  // Remove if already present
+  viewed = viewed.filter(p => p.id !== id);
+  // Add to front
+  viewed.unshift({ id, title, url, image, price });
+  // Keep max 8
+  if (viewed.length > 8) viewed = viewed.slice(0, 8);
+  localStorage.setItem(KEY, JSON.stringify(viewed));
+}
+
+function initRecentlyViewed() {
+  const section = $('.recently-viewed');
+  if (!section) return;
+
+  const KEY = 'bquik-recently-viewed';
+  const currentProductId = section.dataset.currentProduct;
+  let viewed = [];
+  try { viewed = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e) {}
+
+  // Exclude current product
+  viewed = viewed.filter(p => p.id !== currentProductId);
+  if (viewed.length === 0) return;
+
+  const carousel = section.querySelector('.collection-carousel');
+  if (!carousel) return;
+
+  carousel.innerHTML = viewed.map(p => `
+    <div role="listitem" class="product-card-wrap">
+      <article class="product-card" aria-label="${p.title}">
+        <div class="product-card__media">
+          <a href="${p.url}" class="product-card__image-link" tabindex="-1" aria-hidden="true">
+            ${p.image ? `<img src="${p.image}" alt="${p.title}" loading="lazy" class="product-card__img" style="width:100%;height:100%;object-fit:cover;">` : ''}
+          </a>
+        </div>
+        <div class="product-card__info">
+          <h3 class="product-card__title">
+            <a href="${p.url}" class="product-card__title-link">${p.title}</a>
+          </h3>
+          <div class="product-card__price">
+            <span class="product-card__price-current">${formatMoney(parseInt(p.price, 10))}</span>
+          </div>
+        </div>
+      </article>
+    </div>`).join('');
+
+  section.classList.add('is-visible');
+}
+
 /* ── Init ─────────────────────────────────────────────────── */
 function init() {
   initHeader();
@@ -722,11 +921,14 @@ function init() {
   initSearch();
   initAddToCart();
   initCartPage();
+  initRecentlyViewed();
 
   // Product page
   if (document.body.classList.contains('template-product')) {
     initProductPage();
     initImageZoom();
+    trackRecentlyViewed();
+    initProductRecommendations();
   }
 }
 
