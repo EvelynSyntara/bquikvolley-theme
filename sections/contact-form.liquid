@@ -1,0 +1,168 @@
+<section class="contact-page section-pad" data-section-id="{{ section.id }}">
+  <div class="container">
+    <div class="contact-layout">
+
+      <div class="contact-intro" data-reveal>
+        <p class="text-xs text-accent" style="margin-bottom:var(--space-md);">{{ section.settings.eyebrow }}</p>
+        <h1 class="text-h1" style="margin-bottom:var(--space-lg);">{{ section.settings.title }}</h1>
+        <p class="contact-intro__body">{{ section.settings.body }}</p>
+
+        {%- if section.settings.show_details -%}
+          <div class="contact-details">
+            {%- if section.settings.email != blank -%}
+              <div class="contact-detail">
+                <span class="contact-detail__label">Email</span>
+                <a href="mailto:{{ section.settings.email }}" class="contact-detail__value">{{ section.settings.email }}</a>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.response_time != blank -%}
+              <div class="contact-detail">
+                <span class="contact-detail__label">Response time</span>
+                <span class="contact-detail__value">{{ section.settings.response_time }}</span>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="contact-form-wrap" data-reveal data-reveal-delay="1">
+        {%- form 'contact', class: 'contact-form' -%}
+
+          {%- if form.posted_successfully? -%}
+            <div class="contact-success" role="status">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <div>
+                <strong>Message sent.</strong>
+                <p>We'll get back to you within {{ section.settings.response_time | default: '1–2 business days' }}.</p>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="contact-error" role="alert">
+              Please check the fields below and try again.
+            </div>
+          {%- endif -%}
+
+          <div class="contact-form__row">
+            <div class="contact-form__field">
+              <label for="ContactForm-name" class="contact-form__label">Name</label>
+              <input
+                type="text"
+                id="ContactForm-name"
+                name="contact[name]"
+                class="form-input contact-form__input"
+                value="{{ form.name }}"
+                placeholder="Your name"
+                autocomplete="name"
+                required
+                aria-required="true"
+              >
+            </div>
+            <div class="contact-form__field">
+              <label for="ContactForm-email" class="contact-form__label">Email</label>
+              <input
+                type="email"
+                id="ContactForm-email"
+                name="contact[email]"
+                class="form-input contact-form__input{% if form.errors contains 'email' %} has-error{% endif %}"
+                value="{{ form.email }}"
+                placeholder="your@email.com"
+                autocomplete="email"
+                required
+                aria-required="true"
+              >
+            </div>
+          </div>
+
+          <div class="contact-form__field">
+            <label for="ContactForm-subject" class="contact-form__label">Subject</label>
+            <input
+              type="text"
+              id="ContactForm-subject"
+              name="contact[subject]"
+              class="form-input contact-form__input"
+              value="{{ form.subject }}"
+              placeholder="What's it about?"
+            >
+          </div>
+
+          <div class="contact-form__field">
+            <label for="ContactForm-message" class="contact-form__label">Message</label>
+            <textarea
+              id="ContactForm-message"
+              name="contact[body]"
+              class="form-input contact-form__textarea"
+              placeholder="Tell us what's on your mind…"
+              rows="6"
+              required
+              aria-required="true"
+            >{{ form.body }}</textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            {{ section.settings.button_label | default: 'Send Message' }}
+          </button>
+
+        {%- endform -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact Form",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Get in Touch"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "We'd Love to Hear From You"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Intro text",
+      "default": "Got a question about sizing, an order, or just want to talk volleyball? Drop us a message and we'll get back to you fast."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_details",
+      "label": "Show contact details",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Contact email",
+      "default": "hello@bquikvolley.com"
+    },
+    {
+      "type": "text",
+      "id": "response_time",
+      "label": "Response time",
+      "default": "within 24 hours"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send Message"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form"
+    }
+  ]
+}
+{% endschema %}
