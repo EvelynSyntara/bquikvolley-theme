@@ -420,9 +420,9 @@ function initVariantSelector() {
     if (!optionName) return;
 
     if (btn.classList.contains('size-btn')) {
-      // Deselect all siblings (buttons sharing the same optionGroup), then select this one
       const wasActive = btn.classList.contains('active');
-      $$(`.size-btn[data-option-group="${optionName}"]`, form).forEach(b => b.classList.remove('active'));
+      // parentElement is the .size-options container — deselect all siblings
+      btn.parentElement.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
       if (wasActive) {
         delete selectedOptions[optionName];
       } else {
@@ -430,8 +430,8 @@ function initVariantSelector() {
         selectedOptions[optionName] = btn.dataset.value;
       }
     } else {
-      // Colour buttons always select (no deselect toggle)
-      $$(`.color-btn[data-option-group="${optionName}"]`, form).forEach(b => b.classList.remove('active'));
+      // Colour buttons always select (no toggle)
+      btn.parentElement.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedOptions[optionName] = btn.dataset.value;
     }
