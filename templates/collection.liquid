@@ -1,45 +1,38 @@
+<!-- Full-bleed collection banner -->
+<div class="collection-banner">
+  {%- if collection.image -%}
+    {{
+      collection.image
+      | image_url: width: 1600
+      | image_tag:
+        loading: 'eager',
+        sizes: '100vw',
+        alt: collection.title
+    }}
+  {%- else -%}
+    <img
+      src="{{ 'collection-banner.png' | asset_url }}"
+      loading="eager"
+      fetchpriority="high"
+      style="width:100%;height:100%;object-fit:cover;object-position:center top;"
+      alt="{{ collection.title }}"
+    >
+  {%- endif -%}
+  <div class="collection-banner__content">
+    <div class="container">
+      <h1 class="text-h1 collection-banner__title" data-reveal>{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <p style="color:rgba(255,255,255,0.7);max-width:50ch;margin-top:12px;" data-reveal data-reveal-delay="1">
+          {{ collection.description }}
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<!-- Toolbar / filters -->
 <div class="collection-header">
   <div class="container">
-    {%- if collection.image -%}
-      <div class="collection-banner">
-        {{
-          collection.image
-          | image_url: width: 1600
-          | image_tag:
-            loading: 'eager',
-            sizes: '100vw',
-            alt: collection.title
-        }}
-        <div class="collection-banner__content">
-          <h1 class="text-h1" data-reveal>{{ collection.title }}</h1>
-          {%- if collection.description != blank -%}
-            <p style="color:var(--c-text-2);max-width:50ch;margin-top:12px;" data-reveal data-reveal-delay="1">
-              {{ collection.description }}
-            </p>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- else -%}
-      <div class="collection-banner">
-        <img
-          src="{{ 'collection-banner.png' | asset_url }}"
-          loading="eager"
-          fetchpriority="high"
-          style="width:100%;height:100%;object-fit:cover;object-position:center top;"
-          alt="{{ collection.title }}"
-        >
-        <div class="collection-banner__content">
-          <h1 class="text-h1" data-reveal>{{ collection.title }}</h1>
-          {%- if collection.description != blank -%}
-            <p style="color:var(--c-text-2);max-width:50ch;margin-top:12px;" data-reveal data-reveal-delay="1">
-              {{ collection.description }}
-            </p>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- endif -%}
-
-    <!-- Toolbar: count + sort + tag filters -->
     <div class="collection-toolbar">
       <span style="font-size:0.8125rem;font-weight:600;color:var(--c-text-3);">
         {{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}
@@ -51,23 +44,34 @@
             <input type="hidden" name="q[]" value="{{ tag | escape }}">
           {%- endfor -%}
         {%- endif -%}
-        <label for="sort-by" class="text-xs" style="color:var(--c-text-3);">Sort:</label>
-        <select
-          id="sort-by"
-          name="sort_by"
-          class="sort-select"
-          onchange="document.getElementById('sort-form').submit()"
-          aria-label="Sort products by"
-        >
-          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-          <option value="manual"{% if sort_by == 'manual' %} selected{% endif %}>Featured</option>
-          <option value="best-selling"{% if sort_by == 'best-selling' %} selected{% endif %}>Best Selling</option>
-          <option value="created-descending"{% if sort_by == 'created-descending' %} selected{% endif %}>Newest</option>
-          <option value="price-ascending"{% if sort_by == 'price-ascending' %} selected{% endif %}>Price: Low &rarr; High</option>
-          <option value="price-descending"{% if sort_by == 'price-descending' %} selected{% endif %}>Price: High &rarr; Low</option>
-          <option value="title-ascending"{% if sort_by == 'title-ascending' %} selected{% endif %}>A &rarr; Z</option>
-          <option value="title-descending"{% if sort_by == 'title-descending' %} selected{% endif %}>Z &rarr; A</option>
-        </select>
+        <label class="text-xs" style="color:var(--c-text-3);">Sort:</label>
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+        <div class="sort-dropdown" id="sort-dropdown">
+          <button class="sort-dropdown__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="sort-dropdown__current">
+              {%- case sort_by -%}
+                {%- when 'best-selling' -%}Best Selling
+                {%- when 'created-descending' -%}Newest
+                {%- when 'price-ascending' -%}Price: Low → High
+                {%- when 'price-descending' -%}Price: High → Low
+                {%- when 'title-ascending' -%}A → Z
+                {%- when 'title-descending' -%}Z → A
+                {%- else -%}Featured
+              {%- endcase -%}
+            </span>
+            <svg class="sort-dropdown__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="sort-dropdown__menu" role="listbox" aria-label="Sort order">
+            <li role="option" class="sort-dropdown__option{% if sort_by == 'manual' or sort_by == blank %} is-active{% endif %}" data-value="manual">Featured</li>
+            <li role="option" class="sort-dropdown__option{% if sort_by == 'best-selling' %} is-active{% endif %}" data-value="best-selling">Best Selling</li>
+            <li role="option" class="sort-dropdown__option{% if sort_by == 'created-descending' %} is-active{% endif %}" data-value="created-descending">Newest</li>
+            <li role="option" class="sort-dropdown__option{% if sort_by == 'price-ascending' %} is-active{% endif %}" data-value="price-ascending">Price: Low → High</li>
+            <li role="option" class="sort-dropdown__option{% if sort_by == 'price-descending' %} is-active{% endif %}" data-value="price-descending">Price: High → Low</li>
+            <li role="option" class="sort-dropdown__option{% if sort_by == 'title-ascending' %} is-active{% endif %}" data-value="title-ascending">A → Z</li>
+            <li role="option" class="sort-dropdown__option{% if sort_by == 'title-descending' %} is-active{% endif %}" data-value="title-descending">Z → A</li>
+          </ul>
+          <input type="hidden" name="sort_by" class="sort-dropdown__input" value="{{ sort_by }}">
+        </div>
       </form>
     </div>
 
@@ -91,9 +95,15 @@
     {%- if collection.products.size > 0 -%}
       <div class="products-grid" role="list" aria-label="Products">
         {%- for product in collection.products -%}
-          <div role="listitem" data-reveal data-reveal-delay="{{ forloop.index | modulo: 4 }}">
+          <div role="listitem"{% if forloop.first %} class="product-card-featured-wrap"{% endif %} data-reveal data-reveal-delay="{{ forloop.index | modulo: 4 }}">
             {%- render 'product-card', product: product -%}
           </div>
+          {%- assign mod_check = forloop.index | modulo: 8 -%}
+          {%- if mod_check == 0 and forloop.last == false -%}
+            <div class="collection-brand-strip">
+              WHERE SPEED MEETS STYLE &nbsp;&middot;&nbsp; COURT TO STREET &nbsp;&middot;&nbsp; BQUIK SS25 &nbsp;&middot;&nbsp; MOVE FAST. PLAY SHARP.
+            </div>
+          {%- endif -%}
         {%- endfor -%}
       </div>
 

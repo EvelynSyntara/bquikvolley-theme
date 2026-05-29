@@ -974,6 +974,48 @@ function initRecentlyViewed() {
 }
 
 /* ── Init ─────────────────────────────────────────────────── */
+function initSortDropdown() {
+  const dropdown = document.getElementById('sort-dropdown');
+  if (!dropdown) return;
+  const trigger = dropdown.querySelector('.sort-dropdown__trigger');
+  const menu = dropdown.querySelector('.sort-dropdown__menu');
+  const input = dropdown.querySelector('.sort-dropdown__input');
+  const current = dropdown.querySelector('.sort-dropdown__current');
+  const form = document.getElementById('sort-form');
+
+  trigger.addEventListener('click', () => {
+    const isOpen = dropdown.classList.toggle('is-open');
+    trigger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target)) {
+      dropdown.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  menu.querySelectorAll('.sort-dropdown__option').forEach(option => {
+    option.addEventListener('click', () => {
+      menu.querySelectorAll('.sort-dropdown__option').forEach(o => o.classList.remove('is-active'));
+      option.classList.add('is-active');
+      current.textContent = option.textContent.replace(/^✓\s/, '').trim();
+      input.value = option.dataset.value;
+      dropdown.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      form.submit();
+    });
+  });
+
+  trigger.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trigger.click(); }
+    if (e.key === 'Escape') {
+      dropdown.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
 function init() {
   initHeader();
   initMobileMenu();
@@ -990,6 +1032,7 @@ function init() {
   initAddToCart();
   initCartPage();
   initRecentlyViewed();
+  initSortDropdown();
 
   // Product page
   if (document.body.classList.contains('template-product')) {
