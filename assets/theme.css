@@ -124,8 +124,8 @@ h1, h2, h3, h4, h5, h6 {
   padding-inline: var(--gutter);
 }
 
-.section-pad { padding-block: var(--space-2xl); }
-@media (min-width: 768px) { .section-pad { padding-block: var(--space-3xl); } }
+.section-pad { padding-block: 48px; }
+@media (min-width: 768px) { .section-pad { padding-block: 72px; } }
 
 /* ── 4. Typography Scale ──────────────────────────────────── */
 /* Anton — display / headings (weight 400 only, inherently uppercase) */
@@ -1314,7 +1314,6 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 640px;
   margin-inline: auto;
   text-align: center;
-  padding-block: var(--space-2xl);
 }
 .newsletter__eyebrow {
   font-family: var(--font-ui);

@@ -59,10 +59,10 @@
           "video": "",
           "overlay_opacity": 65,
           "min_height": 100,
-          "eyebrow": "New Season Drop",
-          "headline": "Built for\nThe Court",
-          "subheading": "Performance volleyball apparel engineered for athletes who play hard, train harder, and refuse to settle.",
-          "cta_1_label": "Shop Now",
+          "eyebrow": "SS25 Collection",
+          "headline": "Play Hard.\nLook Sharp.",
+          "subheading": "Premium volleyball jerseys built for the court. Worn by athletes who refuse to lose.",
+          "cta_1_label": "Shop the Drop",
           "cta_1_link": "",
           "cta_2_label": "Our Story",
           "cta_2_link": "",
@@ -72,8 +72,8 @@
       "featured-collection": {
         "type": "featured-collection",
         "settings": {
-          "eyebrow": "What We're Playing In",
-          "title": "Shop the Drop",
+          "eyebrow": "The Kit",
+          "title": "New Arrivals",
           "collection": "",
           "products_to_show": 8,
           "view_all_label": "View All"
@@ -85,9 +85,9 @@
           "layout": "image_first",
           "bg_color": "#0a0a0a",
           "image_badge": "",
-          "eyebrow": "Why BQUIK",
-          "title": "Engineered for the Spike",
-          "text": "<p>Every stitch, seam, and fabric choice is made with one goal: to give you an edge on the court. We work with elite volleyball players to design gear that moves with you, not against you.</p>",
+          "eyebrow": "Built Different",
+          "title": "Made for the Moment",
+          "text": "<p>From training sessions to tournament day, BQUIK gear is engineered to perform when it matters most. Lightweight fabrics, court-grip construction, and a fit that moves with every dive and spike.</p>",
           "cta_label": "Learn More",
           "cta_link": "",
           "cta_style": "primary"
@@ -96,9 +96,9 @@
       "newsletter": {
         "type": "newsletter",
         "settings": {
-          "eyebrow": "Join the Team",
-          "title": "First to the Drop",
-          "body": "Get exclusive early access to new collections, athlete collabs, and member-only deals.",
+          "eyebrow": "Stay in the Loop",
+          "title": "Drop Alerts. Zero Spam.",
+          "body": "Be first for new kits, limited runs, and exclusive athlete collabs.",
           "placeholder": "Your email address",
           "button_label": "Subscribe",
           "fine_print": "No spam. Unsubscribe anytime."
@@ -107,7 +107,7 @@
       "footer": {
         "type": "footer",
         "settings": {
-          "tagline": "Premium volleyball apparel for players who take the court seriously.",
+          "tagline": "Court-ready gear for players who mean business.",
           "instagram": "",
           "tiktok": "",
           "youtube": "",
