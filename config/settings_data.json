@@ -37,7 +37,7 @@
       "announcement-bar": {
         "type": "announcement-bar",
         "settings": {
-          "text": "Free shipping on orders over $75 · Use code SPIKE10 for 10% off your first order",
+          "text": "New season drop just landed · Free shipping over $75 · Use SPIKE10 for 10% off",
           "link": "",
           "bg_color": "#f28500",
           "text_color": "#ffffff",
@@ -59,9 +59,9 @@
           "video": "",
           "overlay_opacity": 65,
           "min_height": 100,
-          "eyebrow": "SS25 Collection",
-          "headline": "Play Hard.\nLook Sharp.",
-          "subheading": "Premium volleyball jerseys built for the court. Worn by athletes who refuse to lose.",
+          "eyebrow": "Where Speed Meets Style",
+          "headline": "Court Ready.\nStreet Approved.",
+          "subheading": "BQUIK blurs the line between high-performance volleyball gear and streetwear culture. Built for the spike. Worn beyond the court.",
           "cta_1_label": "Shop the Drop",
           "cta_1_link": "",
           "cta_2_label": "Our Story",
@@ -72,8 +72,8 @@
       "featured-collection": {
         "type": "featured-collection",
         "settings": {
-          "eyebrow": "The Kit",
-          "title": "New Arrivals",
+          "eyebrow": "The Drop",
+          "title": "Latest Collection",
           "collection": "",
           "products_to_show": 8,
           "view_all_label": "View All"
@@ -85,10 +85,10 @@
           "layout": "image_first",
           "bg_color": "#0a0a0a",
           "image_badge": "",
-          "eyebrow": "Built Different",
-          "title": "Made for the Moment",
-          "text": "<p>From training sessions to tournament day, BQUIK gear is engineered to perform when it matters most. Lightweight fabrics, court-grip construction, and a fit that moves with every dive and spike.</p>",
-          "cta_label": "Learn More",
+          "eyebrow": "Court Meets Street",
+          "title": "Speed Is the Style",
+          "text": "<p>BQUIK started on the court and never left the street. We build for athletes who live in both worlds — where performance is non-negotiable and looking good isn't optional. Lightweight construction, locked-in fit, streetwear energy. This is what it looks like when the two collide.</p>",
+          "cta_label": "Our Story",
           "cta_link": "",
           "cta_style": "primary"
         }
@@ -96,18 +96,98 @@
       "newsletter": {
         "type": "newsletter",
         "settings": {
-          "eyebrow": "Stay in the Loop",
+          "eyebrow": "Stay Locked In",
           "title": "Drop Alerts. Zero Spam.",
-          "body": "Be first for new kits, limited runs, and exclusive athlete collabs.",
+          "body": "First access to new kits, limited collab pieces, and members-only deals. Your inbox, levelled up.",
           "placeholder": "Your email address",
-          "button_label": "Subscribe",
+          "button_label": "I'm In",
           "fine_print": "No spam. Unsubscribe anytime."
+        }
+      },
+      "trust-badges": {
+        "type": "trust-badges",
+        "blocks": {
+          "badge-1": {
+            "type": "badge",
+            "settings": {
+              "icon": "shipping",
+              "title": "Ship Fast",
+              "text": "Free over $75"
+            }
+          },
+          "badge-2": {
+            "type": "badge",
+            "settings": {
+              "icon": "returns",
+              "title": "Easy Returns",
+              "text": "30 days, no stress"
+            }
+          },
+          "badge-3": {
+            "type": "badge",
+            "settings": {
+              "icon": "athletes",
+              "title": "Athlete Approved",
+              "text": "Court-tested. Street-worn."
+            }
+          },
+          "badge-4": {
+            "type": "badge",
+            "settings": {
+              "icon": "quality",
+              "title": "Built to Last",
+              "text": "Premium performance fabrics"
+            }
+          }
+        },
+        "block_order": ["badge-1", "badge-2", "badge-3", "badge-4"],
+        "settings": {}
+      },
+      "stats-bar": {
+        "type": "stats-bar",
+        "blocks": {
+          "stat-1": {
+            "type": "stat",
+            "settings": {
+              "number": "500",
+              "suffix": "+",
+              "label": "Athletes Playing in BQUIK"
+            }
+          },
+          "stat-2": {
+            "type": "stat",
+            "settings": {
+              "number": "100",
+              "suffix": "%",
+              "label": "Court-Tested"
+            }
+          },
+          "stat-3": {
+            "type": "stat",
+            "settings": {
+              "number": "4.9",
+              "suffix": "★",
+              "label": "Average Rating"
+            }
+          },
+          "stat-4": {
+            "type": "stat",
+            "settings": {
+              "number": "30",
+              "suffix": "-Day",
+              "label": "Free Returns"
+            }
+          }
+        },
+        "block_order": ["stat-1", "stat-2", "stat-3", "stat-4"],
+        "settings": {
+          "eyebrow": "By the Numbers"
         }
       },
       "footer": {
         "type": "footer",
         "settings": {
-          "tagline": "Court-ready gear for players who mean business.",
+          "tagline": "Where speed meets style. Built for the court, worn everywhere.",
           "instagram": "",
           "tiktok": "",
           "youtube": "",
