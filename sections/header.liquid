@@ -22,7 +22,13 @@
       {%- if section.settings.logo != blank -%}
         {{ section.settings.logo | image_url: width: 240 | image_tag: loading: 'eager', fetchpriority: 'high', alt: shop.name }}
       {%- else -%}
-        B<span>QUIK</span> VOLLEY
+        <img
+          src="{{ 'bquik-logo-text.png' | asset_url }}"
+          loading="eager"
+          fetchpriority="high"
+          alt="{{ shop.name }}"
+          style="height:40px;width:auto;display:block;"
+        >
       {%- endif -%}
     </a>
 
