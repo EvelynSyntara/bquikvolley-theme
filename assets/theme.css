@@ -1108,9 +1108,6 @@ h1, h2, h3, h4, h5, h6 {
   .products-grid > .product-card-featured-wrap {
     grid-column: span 2;
   }
-  .products-grid > .product-card-featured-wrap .product-card__media {
-    aspect-ratio: 3/2;
-  }
 }
 
 /* Mid-grid editorial brand strip */
