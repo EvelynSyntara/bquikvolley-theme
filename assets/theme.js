@@ -344,9 +344,10 @@ function initVariantSelector() {
 
   let selectedOptions = {};
 
-  // Collect initial selections
-  $$('[data-option-name]', form).forEach(input => {
-    selectedOptions[input.dataset.optionName] = input.dataset.optionValue || input.value;
+  // Seed from buttons Liquid already marked active (the pre-selected variant)
+  $$('.size-btn.active, .color-btn.active', form).forEach(btn => {
+    const grp = btn.dataset.optionGroup;
+    if (grp) selectedOptions[grp] = btn.dataset.value;
   });
 
   function findVariant() {
@@ -360,7 +361,7 @@ function initVariantSelector() {
       if (atcBtn) {
         const allSelected = variantData[0]?.options.every((_, i) => selectedOptions[`option${i + 1}`]);
         atcBtn.disabled = true;
-        atcBtn.textContent = allSelected ? 'Sold Out' : 'Select a size';
+        atcBtn.textContent = allSelected ? 'Sold Out' : 'Select options';
         atcBtn.dataset.variantId = '';
       }
       const lowStockEl = $('[data-low-stock]');
@@ -368,11 +369,15 @@ function initVariantSelector() {
       return;
     }
 
+    // Keep the hidden form input in sync so Buy It Now / dynamic checkout sends the right variant
+    const idInput = $('input[name="id"]', form);
+    if (idInput) idInput.value = String(variant.id);
+
     const inStock = variant.available;
     if (atcBtn) {
       atcBtn.disabled = !inStock;
       atcBtn.textContent = inStock ? 'Add to Cart' : 'Sold Out';
-      atcBtn.dataset.variantId = variant.id;
+      atcBtn.dataset.variantId = String(variant.id);
     }
 
     const price = formatMoney(variant.price);
@@ -406,23 +411,37 @@ function initVariantSelector() {
     window.history.replaceState({}, '', url);
   }
 
-  // Size / option buttons
+  // Size + colour option buttons
   on(form, 'click', e => {
-    const sizeBtn = e.target.closest('.size-btn:not(.unavailable)');
-    if (!sizeBtn) return;
+    const btn = e.target.closest('.size-btn:not(.unavailable), .color-btn');
+    if (!btn) return;
 
-    const optionGroup = sizeBtn.closest('[data-option-group]');
-    const optionName = optionGroup?.dataset.optionGroup;
+    const optionName = btn.dataset.optionGroup;
     if (!optionName) return;
 
-    const wasActive = sizeBtn.classList.contains('active');
-    $$('.size-btn', optionGroup).forEach(b => b.classList.remove('active'));
-    if (wasActive) {
-      delete selectedOptions[optionName];
+    if (btn.classList.contains('size-btn')) {
+      // Deselect all siblings (buttons sharing the same optionGroup), then select this one
+      const wasActive = btn.classList.contains('active');
+      $$(`.size-btn[data-option-group="${optionName}"]`, form).forEach(b => b.classList.remove('active'));
+      if (wasActive) {
+        delete selectedOptions[optionName];
+      } else {
+        btn.classList.add('active');
+        selectedOptions[optionName] = btn.dataset.value;
+      }
     } else {
-      sizeBtn.classList.add('active');
-      selectedOptions[optionName] = sizeBtn.dataset.value;
+      // Colour buttons always select (no deselect toggle)
+      $$(`.color-btn[data-option-group="${optionName}"]`, form).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedOptions[optionName] = btn.dataset.value;
     }
+
+    // Reflect selected value in the label next to option name
+    const labelEl = form.querySelector(`.variant-section [data-option-group="${optionName}"]`)
+      ?.closest('.variant-section')
+      ?.querySelector('.variant-selected-value');
+    if (labelEl) labelEl.textContent = selectedOptions[optionName] || '';
+
     updateUI(findVariant());
   });
 
