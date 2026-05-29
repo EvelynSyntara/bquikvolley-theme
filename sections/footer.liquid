@@ -58,6 +58,9 @@
     <div class="footer-bottom">
       <p class="footer-bottom__copy">
         &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+        {%- if section.settings.abn != blank -%}
+          &nbsp;&middot;&nbsp;ABN {{ section.settings.abn }}
+        {%- endif -%}
       </p>
       <nav class="footer-bottom__links" aria-label="Footer legal links">
         {%- for link in linklists['footer'].links -%}
@@ -89,6 +92,12 @@
       "id": "tagline",
       "label": "Brand tagline",
       "default": "Premium volleyball apparel for players who take the court seriously."
+    },
+    {
+      "type": "text",
+      "id": "abn",
+      "label": "ABN (optional)",
+      "placeholder": "12 345 678 901"
     },
     {
       "type": "header",

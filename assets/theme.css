@@ -2379,3 +2379,73 @@ h1, h2, h3, h4, h5, h6 {
 /* ── 35. Recently Viewed Products ─────────────────────────── */
 .recently-viewed { display: none; }
 .recently-viewed.is-visible { display: block; }
+
+/* ── 36. Instagram / UGC Strip ────────────────────────────── */
+.instagram-strip { padding: var(--space-3xl) 0; }
+.instagram-strip__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+.instagram-strip__title { margin-bottom: 4px; }
+.instagram-strip__hashtag {
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--c-accent);
+  letter-spacing: 0.04em;
+}
+.instagram-strip__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+@media (min-width: 640px) {
+  .instagram-strip__grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 1024px) {
+  .instagram-strip__grid { grid-template-columns: repeat(6, 1fr); }
+}
+.instagram-strip__item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  display: block;
+  background: var(--c-bg-2);
+}
+.instagram-strip__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s var(--ease-out);
+}
+.instagram-strip__item:hover img { transform: scale(1.06); }
+.instagram-strip__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity var(--t-base);
+  color: #fff;
+  padding: var(--space-md);
+  text-align: center;
+}
+.instagram-strip__item:hover .instagram-strip__overlay,
+.instagram-strip__item:focus-within .instagram-strip__overlay { opacity: 1; }
+.instagram-strip__caption {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
